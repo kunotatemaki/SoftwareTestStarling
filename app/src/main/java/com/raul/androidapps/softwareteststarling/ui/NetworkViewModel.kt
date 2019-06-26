@@ -1,15 +1,12 @@
 package com.raul.androidapps.softwareteststarling.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raul.androidapps.softwareteststarling.network.NetworkServiceFactory
-import com.raul.androidapps.softwareteststarling.network.Resource
 import com.raul.androidapps.softwareteststarling.persistence.PersistenceManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class NetworkViewModel @Inject constructor(
@@ -17,29 +14,48 @@ class NetworkViewModel @Inject constructor(
     private val persistenceManager: PersistenceManager
 ) : ViewModel() {
 
-    private val networkStatus: MutableLiveData<Resource.Status> = MutableLiveData()
-
-    fun getNetworkStatus(): LiveData<Resource.Status> = networkStatus
-
     /**
      * This function request the accounts from the API, and stores the first one, if the call was successful, in the database.
-     * It only stores the first one because for the purpose of the app, it only manage the case of the user having one account.
-     * In a real app, it should handle several accounts
      */
-    suspend fun getAccounts() {
-        networkStatus.value = Resource.Status.LOADING
+    fun getAccounts() {
         viewModelScope.launch(Dispatchers.IO) {
             val accounts = networkServiceFactory.getServiceInstance().getAccounts()
-            networkStatus.postValue(
-                if (accounts.isSuccessful) {
-                    accounts.body()?.accounts?.firstOrNull()?.let { account ->
-                        persistenceManager.saveAccount(account)
-                    }
-                    Resource.Status.SUCCESS
-                } else {
-                    Resource.Status.ERROR
+            if (accounts.isSuccessful) {
+                persistenceManager.saveAccounts(accounts.body())
+                accounts.body()?.accounts?.firstOrNull()?.let { account ->
+                    getAccountBalance(accountId = account.accountUid)
+                    getAccountIdentifiers(accountId = account.accountUid)
+
                 }
-            )
+            }
         }
     }
+
+    /**
+     * This function request the account balance, and stores it in the database.
+     * @param accountId id of the account to be fetched
+     */
+    fun getAccountBalance(accountId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val balanceResponse = networkServiceFactory.getServiceInstance().getAccountBalance(accountId)
+            if (balanceResponse.isSuccessful) {
+                persistenceManager.saveBalance(accountId, balanceResponse.body())
+            }
+        }
+    }
+
+    /**
+     * This function request the account identifiers, and stores it in the database.
+     * @param accountId id of the account to be fetched
+     */
+    fun getAccountIdentifiers(accountId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val identifiersResponse = networkServiceFactory.getServiceInstance().getAccountIdentifiers(accountId)
+            if (identifiersResponse.isSuccessful) {
+                persistenceManager.saveIdentifiers(accountId, identifiersResponse.body())
+            }
+        }
+    }
+
+
 }
