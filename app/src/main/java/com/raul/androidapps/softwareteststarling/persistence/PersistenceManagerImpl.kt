@@ -14,6 +14,10 @@ class PersistenceManagerImpl @Inject constructor(
     private val encryption: Encryption
 ) : PersistenceManager {
 
+    /**
+     * save accounts in the db. The accounts have the accountUid encrypted
+     * @param accountResponse response fetched from the server
+     */
     override suspend fun saveAccounts(accountResponse: AccountsResponse?) {
         accountResponse?.accounts?.let { listUnencrypted->
             val listOfAccounts = listUnencrypted.map { AccountEntity.fromAccountUnencrypted(it, encryption) }
@@ -21,13 +25,27 @@ class PersistenceManagerImpl @Inject constructor(
         }
     }
 
+    /**
+     * return the stored accounts in an observable
+     * @return list of accounts wrapped in a LiveData
+     */
     override fun getAccounts(): LiveData<List<AccountEntity>> =
         db.accountDao().getAccounts()
 
-    override suspend fun saveBalance(accountId: String, balance: BalanceResponse?) {
+    /**
+     * save account balance in the db. The sensible information is stored encrypted
+     * @param accountId account id
+     * @param balance response fetched from the server
+     */
+    override suspend fun saveBalance(accountId: String, balanceResponse: BalanceResponse?) {
 
     }
 
+    /**
+     * save account identifiers in the db. The sensible information is stored encrypted
+     * @param accountId account id
+     * @param balance response fetched from the server
+     */
     override suspend fun saveIdentifiers(accountId: String, identifiersResponse: IdentifiersResponse?) {
 
     }
