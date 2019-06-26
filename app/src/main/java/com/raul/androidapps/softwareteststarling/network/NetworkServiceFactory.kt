@@ -1,5 +1,6 @@
 package com.raul.androidapps.softwareteststarling.network
 
+import com.google.gson.GsonBuilder
 import com.raul.androidapps.softwareteststarling.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -37,9 +38,11 @@ class NetworkServiceFactory @Inject constructor() {
 
             chain.proceed(request)
         }
+
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create()
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(httpClient.build())
             .build().create(StarlingApi::class.java)
     }
