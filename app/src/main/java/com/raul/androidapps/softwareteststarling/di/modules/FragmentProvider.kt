@@ -1,7 +1,7 @@
 package com.raul.androidapps.softwareteststarling.di.modules
 
 import com.raul.androidapps.softwareteststarling.di.interfaces.CustomScopes
-import com.raul.androidapps.softwareteststarling.ui.main.AccountsFragment
+import com.raul.androidapps.softwareteststarling.ui.main.AccountFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -13,6 +13,6 @@ abstract class FragmentsProvider {
 
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
-    abstract fun providesAccountsFragmentFactory(): AccountsFragment
+    abstract fun providesAccountsFragmentFactory(): AccountFragment
 
 }

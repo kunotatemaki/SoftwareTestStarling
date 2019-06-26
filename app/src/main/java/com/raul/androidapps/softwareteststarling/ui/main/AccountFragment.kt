@@ -10,23 +10,23 @@ import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.MainFragmentBinding
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
 
-class AccountsFragment : BaseFragment() {
+class AccountFragment : BaseFragment() {
 
     private lateinit var binding: MainFragmentBinding
 
-    private lateinit var viewModel: AccountsViewModel
+    private lateinit var viewModel: AccountViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.accounts_fragment, container, false, starlingBindingComponent)
+        binding = DataBindingUtil.inflate(inflater, R.layout.account_fragment, container, false, starlingBindingComponent)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(AccountsViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(AccountViewModel::class.java)
         // TODO: Use the ViewModel
     }
 
