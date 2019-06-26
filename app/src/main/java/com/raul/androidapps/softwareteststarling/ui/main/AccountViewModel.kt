@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.raul.androidapps.softwareteststarling.persistence.PersistenceManager
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
+import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWithAllInfo
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
     private val persistenceManager: PersistenceManager
 ) : ViewModel() {
 
-    val accounts: LiveData<List<AccountEntity>> = persistenceManager.getAccounts()
+    val accounts: LiveData<List<AccountWithAllInfo>> = persistenceManager.getAccounts()
 }

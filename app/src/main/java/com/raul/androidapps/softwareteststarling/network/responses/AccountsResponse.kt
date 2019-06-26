@@ -1,7 +1,15 @@
 package com.raul.androidapps.softwareteststarling.network.responses
 
-import com.raul.androidapps.softwareteststarling.model.Account
+import java.util.*
 
-class AccountsResponse constructor(
+data class AccountsResponse constructor(
     val accounts: List<Account>
-)
+) {
+
+    data class Account constructor(
+        val accountUid: String,
+        val defaultCategory: String,
+        val currency: String,
+        val createdAt: Date
+    )
+}

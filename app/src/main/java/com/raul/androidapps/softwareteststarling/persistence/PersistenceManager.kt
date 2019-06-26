@@ -5,11 +5,12 @@ import com.raul.androidapps.softwareteststarling.network.responses.AccountsRespo
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
+import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWithAllInfo
 
 interface PersistenceManager {
 
     suspend fun saveAccounts(accountResponse: AccountsResponse?)
-    fun getAccounts(): LiveData<List<AccountEntity>>
+    fun getAccounts(): LiveData<List<AccountWithAllInfo>>
     suspend fun saveBalance(accountId: String, balance: BalanceResponse?)
     suspend fun saveIdentifiers(accountId: String, identifiersResponse: IdentifiersResponse?)
 

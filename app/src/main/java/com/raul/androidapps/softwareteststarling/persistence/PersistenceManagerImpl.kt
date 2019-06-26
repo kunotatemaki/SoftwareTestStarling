@@ -6,6 +6,8 @@ import com.raul.androidapps.softwareteststarling.network.responses.BalanceRespon
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.databases.StarlingDatabase
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
+import com.raul.androidapps.softwareteststarling.persistence.entities.IdentifiersEntity
+import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWithAllInfo
 import com.raul.androidapps.softwareteststarling.security.Encryption
 import javax.inject.Inject
 
@@ -19,8 +21,9 @@ class PersistenceManagerImpl @Inject constructor(
      * @param accountResponse response fetched from the server
      */
     override suspend fun saveAccounts(accountResponse: AccountsResponse?) {
-        accountResponse?.accounts?.let { listUnencrypted->
-            val listOfAccounts = listUnencrypted.map { AccountEntity.fromAccountUnencrypted(it, encryption) }
+        accountResponse?.accounts?.let { listUnencrypted ->
+            val listOfAccounts =
+                listUnencrypted.map { AccountEntity.fromAccountUnencrypted(it, encryption) }
             db.accountDao().insert(listOfAccounts)
         }
     }
@@ -29,7 +32,7 @@ class PersistenceManagerImpl @Inject constructor(
      * return the stored accounts in an observable
      * @return list of accounts wrapped in a LiveData
      */
-    override fun getAccounts(): LiveData<List<AccountEntity>> =
+    override fun getAccounts(): LiveData<List<AccountWithAllInfo>> =
         db.accountDao().getAccounts()
 
     /**
@@ -46,7 +49,17 @@ class PersistenceManagerImpl @Inject constructor(
      * @param accountId account id
      * @param balance response fetched from the server
      */
-    override suspend fun saveIdentifiers(accountId: String, identifiersResponse: IdentifiersResponse?) {
+    override suspend fun saveIdentifiers(
+        accountId: String,
+        identifiersResponse: IdentifiersResponse?
+    ) {
+
+        val identifiers = IdentifiersEntity.fromccountIdentifierUnencrypted(
+            accountId,
+            identifiersResponse,
+            encryption
+        )
+        db.identifiersDao().insert(identifiers)
 
     }
 

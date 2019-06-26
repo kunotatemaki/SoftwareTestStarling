@@ -9,7 +9,6 @@ import com.raul.androidapps.softwareteststarling.network.responses.BalanceRespon
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.PersistenceManager
 import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
 import org.junit.Before
@@ -74,7 +73,7 @@ class NetworkViewModelTest {
             Mockito.`when`(starlingApi.getAccounts()).thenReturn(
                 Response.success(accountsResponse)
             )
-            val response = viewModelTest.getAccounts()
+            val response = viewModelTest.getAccountsAsync()
             response.join()
             verify(persistenceManager, times(1)).saveAccounts(accountsResponse)
         }
@@ -86,7 +85,7 @@ class NetworkViewModelTest {
             Mockito.`when`(starlingApi.getAccounts()).thenReturn(
                 Response.error(400, ResponseBody.create(null, ""))
             )
-            val response = viewModelTest.getAccounts()
+            val response = viewModelTest.getAccountsAsync()
             response.join()
             verify(persistenceManager, times(0)).saveAccounts(accountsResponse)
         }
@@ -98,7 +97,7 @@ class NetworkViewModelTest {
             Mockito.`when`(starlingApi.getAccountBalance(accountUid)).thenReturn(
                 Response.success(balanceResponse)
             )
-            val response = viewModelTest.getAccountBalance(accountUid)
+            val response = viewModelTest.getAccountBalanceAsync(accountUid)
             response.join()
             verify(persistenceManager, times(1)).saveBalance(accountUid, balanceResponse)
         }
@@ -110,7 +109,7 @@ class NetworkViewModelTest {
             Mockito.`when`(starlingApi.getAccountBalance(accountUid)).thenReturn(
                 Response.error(400, ResponseBody.create(null, ""))
             )
-            val response = viewModelTest.getAccountBalance(accountUid)
+            val response = viewModelTest.getAccountBalanceAsync(accountUid)
             response.join()
             verify(persistenceManager, times(0)).saveBalance(accountUid, balanceResponse)
         }
@@ -122,7 +121,7 @@ class NetworkViewModelTest {
             Mockito.`when`(starlingApi.getAccountIdentifiers(accountUid)).thenReturn(
                 Response.success(identifiersResponse)
             )
-            val response = viewModelTest.getAccountIdentifiers(accountUid)
+            val response = viewModelTest.getAccountIdentifiersAsync(accountUid)
             response.join()
             verify(persistenceManager, times(1)).saveIdentifiers(accountUid, identifiersResponse)
         }
@@ -134,7 +133,7 @@ class NetworkViewModelTest {
             Mockito.`when`(starlingApi.getAccountIdentifiers(accountUid)).thenReturn(
                 Response.error(400, ResponseBody.create(null, ""))
             )
-            val response = viewModelTest.getAccountIdentifiers(accountUid)
+            val response = viewModelTest.getAccountIdentifiersAsync(accountUid)
             response.join()
             verify(persistenceManager, times(0)).saveIdentifiers(accountUid, identifiersResponse)
         }

@@ -7,7 +7,6 @@ import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.ui.common.StarlingViewModelFactory
 import com.raul.androidapps.softwareteststarling.databinding.MainActivityBinding
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -23,7 +22,7 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         networkViewModel = ViewModelProviders.of(this,viewModelFactory ).get(NetworkViewModel::class.java)
-        networkViewModel.getAccounts()
+        networkViewModel.getAccountsAsync()
     }
 
 }

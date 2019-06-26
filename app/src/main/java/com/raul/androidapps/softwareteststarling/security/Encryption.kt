@@ -85,7 +85,7 @@ class Encryption @Inject constructor(private val context: Context){
         keyStore.deleteEntry(alias)
     }
 
-    fun encryptString(text: String, alias: String): String {
+    fun encryptString(text: String?, alias: String): String {
 
         val keyStore = getKeystoreInstance()
         var encryptedText = ""
@@ -98,7 +98,7 @@ class Encryption @Inject constructor(private val context: Context){
             val inCipher = Cipher.getInstance(CIPHER_TYPE)
             inCipher.init(Cipher.ENCRYPT_MODE, publicKey)
 
-            val bytes = inCipher.doFinal(text.toByteArray())
+            val bytes = inCipher.doFinal(text?.toByteArray())
             encryptedText = Base64.encodeToString(bytes, Base64.DEFAULT)
 
 
@@ -109,7 +109,7 @@ class Encryption @Inject constructor(private val context: Context){
         return encryptedText
     }
 
-    fun decryptString(text: String, alias: String): String {
+    fun decryptString(text: String?, alias: String): String {
 
         val keyStore = getKeystoreInstance()
         var decryptedText = ""

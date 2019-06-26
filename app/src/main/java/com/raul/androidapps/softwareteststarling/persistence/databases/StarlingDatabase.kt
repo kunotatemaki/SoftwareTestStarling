@@ -7,7 +7,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.raul.androidapps.softwareteststarling.persistence.daos.AccountDao
+import com.raul.androidapps.softwareteststarling.persistence.daos.IdentifiersDao
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
+import com.raul.androidapps.softwareteststarling.persistence.entities.IdentifiersEntity
 import com.raul.androidapps.softwareteststarling.persistence.utils.DatabasePopulateTool
 import com.raul.androidapps.softwareteststarling.persistence.utils.DbConverters
 import com.raul.androidapps.softwareteststarling.persistence.utils.PersistenceConstants
@@ -17,10 +19,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [(AccountEntity::class)], exportSchema = false, version = 1)
+@Database(entities = [AccountEntity::class, IdentifiersEntity::class], exportSchema = false, version = 1)
 @TypeConverters(DbConverters::class)
 abstract class StarlingDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao
+    abstract fun identifiersDao(): IdentifiersDao
 
     companion object {
 

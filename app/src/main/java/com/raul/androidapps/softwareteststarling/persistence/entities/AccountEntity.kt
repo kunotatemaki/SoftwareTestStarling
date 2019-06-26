@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.raul.androidapps.softwareteststarling.BuildConfig
-import com.raul.androidapps.softwareteststarling.model.Account
+import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
 import com.raul.androidapps.softwareteststarling.security.Encryption
 import java.util.*
 
@@ -30,7 +30,7 @@ data class AccountEntity constructor(
          * @return encrypted info ready to be stored in the db
          */
         @JvmStatic
-        fun fromAccountUnencrypted(account: Account, encryption: Encryption): AccountEntity =
+        fun fromAccountUnencrypted(account: AccountsResponse.Account, encryption: Encryption): AccountEntity =
             AccountEntity(
                 accountUid = encryption.encryptString(account.accountUid, BuildConfig.ENCRYPTION_ALIAS),
                 defaultCategory = account.defaultCategory,
@@ -43,8 +43,8 @@ data class AccountEntity constructor(
      * @param encryption class for encrypt/decrypt
      * @return POJO with plain text
      */
-    fun toAccountUnencrypted(encryption: Encryption): Account =
-        Account(
+    fun toAccountUnencrypted(encryption: Encryption): AccountsResponse.Account =
+        AccountsResponse.Account(
             accountUid = encryption.decryptString(this.accountUid, BuildConfig.ENCRYPTION_ALIAS),
             defaultCategory = this.defaultCategory,
             currency = this.currency,
