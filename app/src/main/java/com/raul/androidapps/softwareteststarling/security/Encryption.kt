@@ -20,11 +20,14 @@ import java.security.KeyStoreException
 import java.security.interfaces.RSAPublicKey
 import java.util.*
 import javax.crypto.Cipher
+import javax.inject.Inject
 import javax.security.auth.x500.X500Principal
 
-object Encryption {
+class Encryption @Inject constructor(private val context: Context){
 
-    private const val CIPHER_TYPE = "RSA/ECB/PKCS1Padding"
+    companion object {
+        private const val CIPHER_TYPE = "RSA/ECB/PKCS1Padding"
+    }
 
     private fun getKeystoreInstance(): KeyStore {
         val keyStore: KeyStore = KeyStore.getInstance("AndroidKeyStore")
@@ -32,7 +35,7 @@ object Encryption {
         return keyStore
     }
 
-    private fun createNewKeys(alias: String, context: Context) {
+    private fun createNewKeys(alias: String) {
 
         val keyStore = getKeystoreInstance()
 
@@ -82,12 +85,12 @@ object Encryption {
         keyStore.deleteEntry(alias)
     }
 
-    fun encryptString(context: Context, text: String, alias: String): String {
+    fun encryptString(text: String, alias: String): String {
 
         val keyStore = getKeystoreInstance()
         var encryptedText = ""
         try {
-            createNewKeys(alias, context)
+            createNewKeys(alias)
             val privateKeyEntry = keyStore.getEntry(alias, null) as KeyStore.PrivateKeyEntry
             val publicKey = privateKeyEntry.certificate.publicKey as RSAPublicKey
 

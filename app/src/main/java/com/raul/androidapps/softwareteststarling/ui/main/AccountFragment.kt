@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBinding
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
+import timber.log.Timber
 
 class AccountFragment : BaseFragment() {
 
@@ -20,14 +21,24 @@ class AccountFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.account_fragment, container, false, starlingBindingComponent)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.account_fragment,
+            container,
+            false,
+            starlingBindingComponent
+        )
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AccountViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel.accounts.observe({ this.lifecycle }) {
+            it?.let { list ->
+                val unencryptedList = list.map { encrypted -> encrypted.toAccountUnencrypted(encryption) }
+            }
+        }
     }
 
 }

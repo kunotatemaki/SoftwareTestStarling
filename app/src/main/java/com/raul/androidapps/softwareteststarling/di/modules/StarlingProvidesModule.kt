@@ -1,7 +1,7 @@
 package com.raul.androidapps.softwareteststarling.di.modules
 
 import android.content.Context
-import com.raul.androidapps.softwaretesttandem.persistence.databases.StarlingDatabase
+import com.raul.androidapps.softwareteststarling.persistence.databases.StarlingDatabase
 import com.raul.androidapps.softwareteststarling.StarlingApplication
 import com.raul.androidapps.softwareteststarling.persistence.utils.DatabasePopulateTool
 import com.raul.androidapps.softwareteststarling.preferences.PreferencesManager

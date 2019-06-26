@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PreferencesManager @Inject constructor(private var context: Context) {
+class PreferencesManager @Inject constructor(private var context: Context, private val encryption: Encryption) {
 
     fun getIntFromPreferences(key: String): Int {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -22,7 +22,7 @@ class PreferencesManager @Inject constructor(private var context: Context) {
     fun getEncryptedStringFromPreferences(key: String, alias: String): String {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val encrypted = prefs.getString(key, "") ?: ""
-        return Encryption.decryptString(encrypted, alias)
+        return encryption.decryptString(encrypted, alias)
     }
 
     fun getBooleanFromPreferences(key: String): Boolean {
@@ -52,7 +52,7 @@ class PreferencesManager @Inject constructor(private var context: Context) {
 
     fun setEncryptedStringIntoPreferences(key: String, value: String, alias: String): Boolean {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val encryptedText = Encryption.encryptString(context, value, alias)
+        val encryptedText = encryption.encryptString(value, alias)
         return if (encryptedText.isNotBlank()) {
             prefs.edit().putString(key, encryptedText).apply()
             true

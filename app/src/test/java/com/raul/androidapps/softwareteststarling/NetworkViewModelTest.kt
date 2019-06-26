@@ -70,7 +70,7 @@ class NetworkViewModelTest {
 
     @Test
     fun accountsResponseSuccess() {
-        runBlocking(Dispatchers.Default) {
+        runBlocking {
             Mockito.`when`(starlingApi.getAccounts()).thenReturn(
                 Response.success(accountsResponse)
             )
@@ -82,7 +82,7 @@ class NetworkViewModelTest {
 
     @Test
     fun accountsResponseError() {
-        runBlocking(Dispatchers.Default) {
+        runBlocking {
             Mockito.`when`(starlingApi.getAccounts()).thenReturn(
                 Response.error(400, ResponseBody.create(null, ""))
             )
@@ -94,7 +94,7 @@ class NetworkViewModelTest {
 
     @Test
     fun accountBalanceResponseSuccess() {
-        runBlocking(Dispatchers.Default) {
+        runBlocking {
             Mockito.`when`(starlingApi.getAccountBalance(accountUid)).thenReturn(
                 Response.success(balanceResponse)
             )
@@ -106,7 +106,7 @@ class NetworkViewModelTest {
 
     @Test
     fun accountBalanceResponseError() {
-        runBlocking(Dispatchers.Default) {
+        runBlocking {
             Mockito.`when`(starlingApi.getAccountBalance(accountUid)).thenReturn(
                 Response.error(400, ResponseBody.create(null, ""))
             )
@@ -118,7 +118,7 @@ class NetworkViewModelTest {
 
     @Test
     fun accountIdentifiersResponseSuccess() {
-        runBlocking(Dispatchers.Default) {
+        runBlocking {
             Mockito.`when`(starlingApi.getAccountIdentifiers(accountUid)).thenReturn(
                 Response.success(identifiersResponse)
             )
@@ -130,7 +130,7 @@ class NetworkViewModelTest {
 
     @Test
     fun accountIdentifiersResponseError() {
-        runBlocking(Dispatchers.Default) {
+        runBlocking {
             Mockito.`when`(starlingApi.getAccountIdentifiers(accountUid)).thenReturn(
                 Response.error(400, ResponseBody.create(null, ""))
             )
