@@ -23,6 +23,12 @@ data class AccountEntity constructor(
     var createdAt: Date
 ) {
     companion object {
+        /**
+         * convert a POJO with info from the server in encrypted info to store in the db
+         * @param account plain text info from the server
+         * @param encryption class for encrypt/decrypt
+         * @return encrypted info ready to be stored in the db
+         */
         @JvmStatic
         fun fromAccountUnencrypted(account: Account, encryption: Encryption): AccountEntity =
             AccountEntity(
@@ -32,6 +38,11 @@ data class AccountEntity constructor(
                 createdAt = account.createdAt
             )
     }
+    /**
+     * decrypt info from the db and return it as a POJO
+     * @param encryption class for encrypt/decrypt
+     * @return POJO with plain text
+     */
     fun toAccountUnencrypted(encryption: Encryption): Account =
         Account(
             accountUid = encryption.decryptString(this.accountUid, BuildConfig.ENCRYPTION_ALIAS),
