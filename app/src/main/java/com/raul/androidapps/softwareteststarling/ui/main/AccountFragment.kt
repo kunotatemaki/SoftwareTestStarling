@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.raul.androidapps.softwareteststarling.R
-import com.raul.androidapps.softwareteststarling.databinding.MainFragmentBinding
+import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBinding
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
 
 class AccountFragment : BaseFragment() {
 
-    private lateinit var binding: MainFragmentBinding
+    private lateinit var binding: AccountFragmentBinding
 
     private lateinit var viewModel: AccountViewModel
 
