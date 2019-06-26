@@ -1,0 +1,10 @@
+{
+  "accounts": [
+    {
+      "accountUid": "1ca81d90-5332-4da0-9529-159df0bb080a",
+      "defaultCategory": "f373d228-3835-4813-aa2d-4ac4b9b497b9",
+      "currency": "GBP",
+      "createdAt": "2018-06-25T19:35:22.251Z"
+    }
+  ]
+}

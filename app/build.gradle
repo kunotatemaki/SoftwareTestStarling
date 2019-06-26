@@ -78,6 +78,17 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlin_version"
 
+    // Android Testing Support Library's runner and rules
+    def version_runner = "1.1.0-alpha4"
+    def version_rules = "1.1.0-alpha4"
+    def version_arch_core = "2.0.0"
+    def roomVersion = '2.1.0'
+    androidTestImplementation "androidx.test:runner:$version_runner"
+    androidTestImplementation "androidx.test:rules:$version_rules"
+    androidTestImplementation "androidx.room:room-testing:$roomVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:$version_arch_core"
+    testImplementation 'android.arch.core:core-testing:1.1.1'
+
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
@@ -92,7 +103,7 @@ dependencies {
     }
 
     //Db and pagination
-    def roomVersion = '2.1.0'
+
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"

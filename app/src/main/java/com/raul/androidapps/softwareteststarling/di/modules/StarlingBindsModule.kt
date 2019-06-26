@@ -1,5 +1,7 @@
 package com.raul.androidapps.softwareteststarling.di.modules
 
+import com.raul.androidapps.softwareteststarling.network.NetworkServiceFactory
+import com.raul.androidapps.softwareteststarling.network.NetworkServiceFactoryImpl
 import com.raul.androidapps.softwareteststarling.persistence.PersistenceManager
 import com.raul.androidapps.softwareteststarling.persistence.PersistenceManagerImpl
 import com.raul.androidapps.softwareteststarling.resources.ResourcesManager
@@ -17,5 +19,8 @@ abstract class StarlingBindsModule {
 
     @Binds
     abstract fun providePersistenceManager(persistenceManagerImpl: PersistenceManagerImpl): PersistenceManager
+
+    @Binds
+    abstract fun provideNetworkServiceFactory(networkServiceFactoryImp: NetworkServiceFactoryImpl): NetworkServiceFactory
 
 }
