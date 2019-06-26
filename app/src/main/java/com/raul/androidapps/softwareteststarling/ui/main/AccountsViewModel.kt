@@ -4,6 +4,6 @@ import androidx.lifecycle.AndroidViewModel
 import com.raul.androidapps.softwareteststarling.StarlingApplication
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(app: StarlingApplication) : AndroidViewModel(app) {
+class AccountsViewModel @Inject constructor(app: StarlingApplication) : AndroidViewModel(app) {
     // TODO: Implement the ViewModel
 }

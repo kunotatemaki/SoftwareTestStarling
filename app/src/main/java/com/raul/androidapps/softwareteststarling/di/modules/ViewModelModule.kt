@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.raul.androidapps.softwareteststarling.di.interfaces.ViewModelKey
 import com.raul.androidapps.softwareteststarling.ui.common.StarlingViewModelFactory
-import com.raul.androidapps.softwareteststarling.ui.main.MainViewModel
+import com.raul.androidapps.softwareteststarling.ui.main.AccountsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -17,8 +17,8 @@ internal abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    internal abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
+    @ViewModelKey(AccountsViewModel::class)
+    internal abstract fun bindMainViewModel(accountsViewModel: AccountsViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: StarlingViewModelFactory): ViewModelProvider.Factory
