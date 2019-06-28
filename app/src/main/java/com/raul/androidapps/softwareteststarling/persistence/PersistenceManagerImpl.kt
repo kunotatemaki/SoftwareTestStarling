@@ -17,22 +17,29 @@ class PersistenceManagerImpl @Inject constructor(
 ) : PersistenceManager {
 
     /**
-     * save accounts in the db. The accounts have the accountUid encrypted
+     * save accounts in the db.
      * @param accountResponse response fetched from the server
      */
     override suspend fun saveAccounts(accountResponse: AccountsResponse?) {
-        accountResponse?.accounts?.let { listUnencrypted ->
-            val listOfAccounts =
-                listUnencrypted.map { AccountEntity.fromAccountUnencrypted(it, encryption) }
-            db.accountDao().insert(listOfAccounts)
+        accountResponse?.accounts?.let { listOfAccounts ->
+            val listOfEntities =
+                listOfAccounts.map { AccountEntity.fromAccountResponse(it) }
+            db.accountDao().insert(listOfEntities)
         }
     }
 
     /**
-     * return the stored accounts in an observable
-     * @return list of accounts wrapped in a LiveData
+     * return all accounts joining tables
+     * @return list of accounts
      */
-    override fun getAccounts(): LiveData<List<AccountWithAllInfo>> =
+    override fun getAccountsWithAllInfo(): LiveData<List<AccountWithAllInfo>> =
+        db.accountDao().getAccountsWithAllInfo()
+
+    /**
+     * return all accounts
+     * @return list of accounts
+     */
+    override fun getAccounts(): LiveData<List<AccountEntity>> =
         db.accountDao().getAccounts()
 
     /**
@@ -40,21 +47,21 @@ class PersistenceManagerImpl @Inject constructor(
      * @param accountId account id
      * @param balance response fetched from the server
      */
-    override suspend fun saveBalance(accountId: String, balanceResponse: BalanceResponse?) {
+    override suspend fun saveBalance(accountId: String, balance: BalanceResponse?) {
 
     }
 
     /**
      * save account identifiers in the db. The sensible information is stored encrypted
      * @param accountId account id
-     * @param balance response fetched from the server
+     * @param identifiersResponse response fetched from the server
      */
     override suspend fun saveIdentifiers(
         accountId: String,
         identifiersResponse: IdentifiersResponse?
     ) {
 
-        val identifiers = IdentifiersEntity.fromccountIdentifierUnencrypted(
+        val identifiers = IdentifiersEntity.fromAccountIdentifierUnencrypted(
             accountId,
             identifiersResponse,
             encryption

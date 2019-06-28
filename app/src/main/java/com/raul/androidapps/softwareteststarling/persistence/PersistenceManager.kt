@@ -10,7 +10,8 @@ import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWi
 interface PersistenceManager {
 
     suspend fun saveAccounts(accountResponse: AccountsResponse?)
-    fun getAccounts(): LiveData<List<AccountWithAllInfo>>
+    fun getAccountsWithAllInfo(): LiveData<List<AccountWithAllInfo>>
+    fun getAccounts(): LiveData<List<AccountEntity>>
     suspend fun saveBalance(accountId: String, balance: BalanceResponse?)
     suspend fun saveIdentifiers(accountId: String, identifiersResponse: IdentifiersResponse?)
 

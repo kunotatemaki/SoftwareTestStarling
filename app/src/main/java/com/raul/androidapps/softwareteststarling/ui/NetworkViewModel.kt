@@ -1,19 +1,24 @@
 package com.raul.androidapps.softwareteststarling.ui
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raul.androidapps.softwareteststarling.network.NetworkServiceFactory
 import com.raul.androidapps.softwareteststarling.persistence.PersistenceManager
+import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 class NetworkViewModel @Inject constructor(
     private val networkServiceFactory: NetworkServiceFactory,
     private val persistenceManager: PersistenceManager
 ) : ViewModel() {
+
+    private val accounts: LiveData<List<AccountEntity>> = persistenceManager.getAccounts()
+
+    fun getAccountsAsObservable() = accounts
 
     /**
      * This function request the accounts from the API, and stores the first one, if the call was successful, in the database.
@@ -33,7 +38,8 @@ class NetworkViewModel @Inject constructor(
      */
     fun getAccountBalanceAsync(accountId: String) =
         viewModelScope.launch(Dispatchers.IO) {
-            val balanceResponse = networkServiceFactory.getServiceInstance().getAccountBalance(accountId)
+            val balanceResponse =
+                networkServiceFactory.getServiceInstance().getAccountBalance(accountId)
             if (balanceResponse.isSuccessful) {
                 persistenceManager.saveBalance(accountId, balanceResponse.body())
             }
@@ -46,7 +52,8 @@ class NetworkViewModel @Inject constructor(
      */
     fun getAccountIdentifiersAsync(accountId: String) =
         viewModelScope.launch(Dispatchers.IO) {
-            val identifiersResponse = networkServiceFactory.getServiceInstance().getAccountIdentifiers(accountId)
+            val identifiersResponse =
+                networkServiceFactory.getServiceInstance().getAccountIdentifiers(accountId)
             if (identifiersResponse.isSuccessful) {
                 Timber.d(identifiersResponse.body()?.toString())
                 persistenceManager.saveIdentifiers(accountId, identifiersResponse.body())

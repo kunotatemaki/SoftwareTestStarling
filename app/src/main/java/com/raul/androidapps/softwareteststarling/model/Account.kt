@@ -19,7 +19,7 @@ data class Account constructor(
     companion object{
         fun fromAccountEncrypted(accountWithAllInfo: AccountWithAllInfo, encryption: Encryption): Account =
             Account(
-                accountUid = encryption.decryptString(accountWithAllInfo.account.accountUid, BuildConfig.ENCRYPTION_ALIAS),
+                accountUid = accountWithAllInfo.account.accountUid,
                 defaultCategory = accountWithAllInfo.account.defaultCategory,
                 currency = accountWithAllInfo.account.currency,
                 createdAt = accountWithAllInfo.account.createdAt,

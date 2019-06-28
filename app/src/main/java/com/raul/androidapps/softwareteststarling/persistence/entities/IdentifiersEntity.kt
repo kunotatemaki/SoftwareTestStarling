@@ -34,16 +34,13 @@ data class IdentifiersEntity constructor(
          * @return encrypted info ready to be stored in the db
          */
         @JvmStatic
-        fun fromccountIdentifierUnencrypted(
+        fun fromAccountIdentifierUnencrypted(
             accountUid: String,
             identifiersResponse: IdentifiersResponse?,
             encryption: Encryption
         ): IdentifiersEntity =
             IdentifiersEntity(
-                accountUid = encryption.encryptString(
-                    accountUid,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                accountUid = accountUid,
                 accountIdentifier = encryption.encryptString(
                     identifiersResponse?.accountIdentifier,
                     BuildConfig.ENCRYPTION_ALIAS
@@ -70,10 +67,7 @@ data class IdentifiersEntity constructor(
      */
     fun toAccountIdentifierUnencrypted(encryption: Encryption): IdentifiersResponse =
         IdentifiersResponse(
-            accountIdentifier = encryption.decryptString(
-                this.accountIdentifier,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
+            accountIdentifier = this.accountIdentifier,
             bankIdentifier = encryption.decryptString(
                 this.bankIdentifier,
                 BuildConfig.ENCRYPTION_ALIAS

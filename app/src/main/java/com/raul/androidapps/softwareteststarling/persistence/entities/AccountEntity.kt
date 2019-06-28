@@ -4,9 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.raul.androidapps.softwareteststarling.BuildConfig
 import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
-import com.raul.androidapps.softwareteststarling.security.Encryption
 import java.util.*
 
 
@@ -24,28 +22,27 @@ data class AccountEntity constructor(
 ) {
     companion object {
         /**
-         * convert a POJO with info from the server in encrypted info to store in the db
+         * convert a POJO with info from the server into an entity to be stored in the db
          * @param account plain text info from the server
-         * @param encryption class for encrypt/decrypt
-         * @return encrypted info ready to be stored in the db
+         * @return info ready to be stored in the db
          */
         @JvmStatic
-        fun fromAccountUnencrypted(account: AccountsResponse.Account, encryption: Encryption): AccountEntity =
+        fun fromAccountResponse(account: AccountsResponse.Account): AccountEntity =
             AccountEntity(
-                accountUid = encryption.encryptString(account.accountUid, BuildConfig.ENCRYPTION_ALIAS),
+                accountUid = account.accountUid,
                 defaultCategory = account.defaultCategory,
                 currency = account.currency,
                 createdAt = account.createdAt
             )
     }
+
     /**
-     * decrypt info from the db and return it as a POJO
-     * @param encryption class for encrypt/decrypt
+     * pojo info from the entity
      * @return POJO with plain text
      */
-    fun toAccountUnencrypted(encryption: Encryption): AccountsResponse.Account =
+    fun toAccountPojo(): AccountsResponse.Account =
         AccountsResponse.Account(
-            accountUid = encryption.decryptString(this.accountUid, BuildConfig.ENCRYPTION_ALIAS),
+            accountUid = this.accountUid,
             defaultCategory = this.defaultCategory,
             currency = this.currency,
             createdAt = this.createdAt

@@ -11,6 +11,9 @@ import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWi
 abstract class AccountDao : BaseDao<AccountEntity>() {
 
     @Query("SELECT * FROM account")
-    abstract fun getAccounts(): LiveData<List<AccountWithAllInfo>>
+    abstract fun getAccountsWithAllInfo(): LiveData<List<AccountWithAllInfo>>
+
+    @Query("SELECT * FROM account")
+    abstract fun getAccounts(): LiveData<List<AccountEntity>>
 
 }

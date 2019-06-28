@@ -8,8 +8,8 @@ import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWi
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
-    private val persistenceManager: PersistenceManager
+    persistenceManager: PersistenceManager
 ) : ViewModel() {
 
-    val accounts: LiveData<List<AccountWithAllInfo>> = persistenceManager.getAccounts()
+    val accounts: LiveData<List<AccountWithAllInfo>> = persistenceManager.getAccountsWithAllInfo()
 }
