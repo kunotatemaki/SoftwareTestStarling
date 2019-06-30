@@ -45,7 +45,6 @@ class NetworkViewModel @Inject constructor(
             }
         }
 
-
     /**
      * This function request the account identifiers, and stores it in the database.
      * @param accountId id of the account to be fetched

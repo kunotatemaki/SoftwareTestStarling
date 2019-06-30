@@ -9,9 +9,11 @@ import com.raul.androidapps.softwareteststarling.network.responses.AccountsRespo
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.daos.AccountDao
+import com.raul.androidapps.softwareteststarling.persistence.daos.BalanceDao
 import com.raul.androidapps.softwareteststarling.persistence.daos.IdentifiersDao
 import com.raul.androidapps.softwareteststarling.persistence.databases.StarlingDatabase
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
+import com.raul.androidapps.softwareteststarling.persistence.entities.BalanceEntity
 import com.raul.androidapps.softwareteststarling.persistence.entities.IdentifiersEntity
 import com.raul.androidapps.softwareteststarling.security.Encryption
 import com.raul.androidapps.softwareteststarling.utils.AssetFileUtil
@@ -37,6 +39,7 @@ class LocalDBTest {
     private lateinit var database: StarlingDatabase
     private lateinit var accountDao: AccountDao
     private lateinit var identifiersDao: IdentifiersDao
+    private lateinit var balanceDao: BalanceDao
 
     private lateinit var accountsResponse: AccountsResponse
     private lateinit var balanceResponse: BalanceResponse
@@ -55,6 +58,7 @@ class LocalDBTest {
 
         accountDao = database.accountDao()
         identifiersDao = database.identifiersDao()
+        balanceDao = database.balanceDao()
     }
 
     @Before
@@ -114,7 +118,7 @@ class LocalDBTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getAccountWithAllInfo() {//todo test balance and transactions
+    fun getAccountWithAllInfo() {//todo transactions
         runBlocking {
             val accountUid = accountsResponse.accounts.firstOrNull()?.accountUid
             accountDao.insert(accountsResponse.accounts.map { AccountEntity.fromAccountResponse(it) })
@@ -125,13 +129,26 @@ class LocalDBTest {
                     encryption
                 )
             )
+            balanceDao.insert(
+                BalanceEntity.fromAccountBalance(
+                    accountUid,
+                    balanceResponse
+                )
+            )
             val list = accountDao.getAccountsWithAllInfo().getValueBlocking()
-            val accountFromDb = list?.firstOrNull()?.account?.toAccountPojo()
-            val identifiersFromDb = list?.firstOrNull()
-                ?.identifiers?.map { it.toAccountIdentifierUnencrypted(encryption) }
-            assertTrue(list?.size == 1)
-            assertTrue(accountFromDb == accountsResponse.accounts.firstOrNull())
-            assertTrue(identifiersFromDb?.firstOrNull() == identifiersResponse)
+            if (list.isNullOrEmpty()) {
+                assertTrue(false)
+            }
+            list?.firstOrNull()?.apply {
+                val accountFromDb = account.toAccountPojo()
+                val identifiersFromDb =
+                    identifiers.map { it.toAccountIdentifierUnencrypted(encryption) }
+                val balanceFromDb = balance.map { it.toAccountBalance() }
+                assertTrue(list.size == 1)
+                assertTrue(accountFromDb == accountsResponse.accounts.firstOrNull())
+                assertTrue(identifiersFromDb.firstOrNull() == identifiersResponse)
+                assertTrue(balanceFromDb.firstOrNull() == balanceResponse)
+            }
 
         }
     }

@@ -6,6 +6,7 @@ import com.raul.androidapps.softwareteststarling.network.responses.BalanceRespon
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.databases.StarlingDatabase
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
+import com.raul.androidapps.softwareteststarling.persistence.entities.BalanceEntity
 import com.raul.androidapps.softwareteststarling.persistence.entities.IdentifiersEntity
 import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWithAllInfo
 import com.raul.androidapps.softwareteststarling.security.Encryption
@@ -48,7 +49,11 @@ class PersistenceManagerImpl @Inject constructor(
      * @param balance response fetched from the server
      */
     override suspend fun saveBalance(accountId: String, balance: BalanceResponse?) {
-
+        val balanceEntity = BalanceEntity.fromAccountBalance(
+            accountId,
+            balance
+        )
+        db.balanceDao().insert(balanceEntity)
     }
 
     /**
@@ -60,14 +65,12 @@ class PersistenceManagerImpl @Inject constructor(
         accountId: String,
         identifiersResponse: IdentifiersResponse?
     ) {
-
         val identifiers = IdentifiersEntity.fromAccountIdentifierUnencrypted(
             accountId,
             identifiersResponse,
             encryption
         )
         db.identifiersDao().insert(identifiers)
-
     }
 
 }

@@ -29,7 +29,8 @@ data class IdentifiersEntity constructor(
     companion object {
         /**
          * convert a POJO with info from the server in encrypted info to store in the db
-         * @param account plain text info from the server
+         * @param accountUid account uid to build the relationship between tables
+         * @param identifiersResponse plain text info from the server
          * @param encryption class for encrypt/decrypt
          * @return encrypted info ready to be stored in the db
          */
