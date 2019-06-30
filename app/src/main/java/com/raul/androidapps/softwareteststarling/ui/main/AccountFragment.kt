@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBinding
@@ -39,14 +40,14 @@ class AccountFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AccountViewModel::class.java)
         networkViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(NetworkViewModel::class.java)
-        viewModel.accounts.observe({ this.lifecycle }) {
+        viewModel.accounts.observe( this.viewLifecycleOwner, Observer {
             it?.let { list ->
                 //we are only reading the first account -> this app only handles one account per user
                 list.firstOrNull()?.let { accountEncrypted ->
                     val account = Account.fromAccountEncrypted(accountEncrypted, encryption)
                 }
             }
-        }
+        })
     }
 
 }

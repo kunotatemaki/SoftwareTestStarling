@@ -32,10 +32,10 @@ class NetworkViewModelTest {
     @Mock
     lateinit var starlingApi: StarlingApi
 
-    lateinit var accountsResponse: AccountsResponse
-    lateinit var balanceResponse: BalanceResponse
-    lateinit var identifiersResponse: IdentifiersResponse
-    lateinit var viewModelTest: NetworkViewModel
+    private lateinit var accountsResponse: AccountsResponse
+    private lateinit var balanceResponse: BalanceResponse
+    private lateinit var identifiersResponse: IdentifiersResponse
+    private lateinit var viewModelTest: NetworkViewModel
     private val accountUid = "accountUid"
 
     @get:Rule

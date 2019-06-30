@@ -85,6 +85,7 @@ dependencies {
     def mockitoKotlin_version = '2.1.0'
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlin_version"
+    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
 
     // Android Testing Support Library's runner and rules
     def version_runner = "1.1.0-alpha4"
