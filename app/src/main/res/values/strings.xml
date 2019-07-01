@@ -3,4 +3,6 @@
     <string name="iban">IBAN:</string>
     <string name="bic">BIC:</string>
     <string name="balance">BALANCE:</string>
+    <string name="potential_saving">Potential Saving:</string>
+    <string name="current_saving">Current Saving:</string>
 </resources>

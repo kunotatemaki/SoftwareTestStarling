@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.FeedItemBinding
 import com.raul.androidapps.softwareteststarling.databinding.StarlingBindingComponent
+import com.raul.androidapps.softwareteststarling.extensions.getPotentialSavings
+import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecissionInStringFormat
 import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.resources.ResourcesManager
 
@@ -46,6 +48,17 @@ class FeedsAdapter constructor(
         ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(feed: Feed, resourcesManager: ResourcesManager) {
             binding.feed = feed
+            binding.resources = resourcesManager
+            feed.amount?.let {
+                val value = it.minorUnits.toFloat() / 100
+                val textAmount = " ${value.getValueWithTwoDecimalsPrecissionInStringFormat()} ${it.currency}"
+                binding.amount = textAmount
+                it.getPotentialSavings()?.let {saving ->
+                    val savingValue = saving.minorUnits.toFloat() / 100
+                    val textSaving = " ${savingValue.getValueWithTwoDecimalsPrecissionInStringFormat()} ${saving.currency}"
+                    binding.saving = textSaving
+                }
+            }
             binding.executePendingBindings()
         }
     }

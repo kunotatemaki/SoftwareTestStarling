@@ -144,7 +144,9 @@ data class FeedsEntity constructor(
             counterPartySubEntitySubIdentifier = this.counterPartySubEntitySubIdentifier,
             reference = encryption.decryptString(this.reference, BuildConfig.ENCRYPTION_ALIAS),
             country = this.country,
-            spendingCategory = this.spendingCategory
+            spendingCategory = this.spendingCategory,
+            potentialSavings = this.potentialSavings,
+            sentToGoal = this.sentToGoal
         )
 
 

@@ -22,5 +22,7 @@ data class Feed constructor(
     val counterPartySubEntitySubIdentifier: String?,
     val reference: String?,
     val country: String?,
-    val spendingCategory: String?
+    val spendingCategory: String?,
+    var potentialSavings: Money?,
+    var sentToGoal: Boolean
 )
