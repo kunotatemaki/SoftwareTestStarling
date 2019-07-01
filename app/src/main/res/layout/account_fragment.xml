@@ -22,7 +22,7 @@
                 bind:identifiers="@{identifiers}"
                 bind:resources="@{resources}"/>
         <include
-                android:id="@+id/forecast_container"
+                android:id="@+id/feed_container"
                 layout="@layout/feeds_content_scrolling"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
