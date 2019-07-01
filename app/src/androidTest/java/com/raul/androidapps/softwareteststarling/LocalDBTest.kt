@@ -127,6 +127,19 @@ class LocalDBTest {
 
     @Test
     @Throws(InterruptedException::class)
+    fun getFeed() {
+        runBlocking {
+            val accountUid = "accountUid"
+            feedsDao.insert(FeedsEntity.fromAccountFeedUnencrypted(accountUid, feedsResponse.feedItems.first(), encryption, false))
+            val feed = feedsDao.getFeed(feedsResponse.feedItems.first().feedItemUid)
+            val feedPojo = feed.toAccountFeedUnencrypted(encryption)
+            assertTrue(feedsResponse.feedItems.first() == feedPojo)
+
+        }
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
     fun getAccountWithAllInfo() {
         runBlocking {
             val accountUid = accountsResponse.accounts.firstOrNull()?.accountUid
@@ -148,7 +161,8 @@ class LocalDBTest {
                 FeedsEntity.fromAccountFeedUnencrypted(
                     accountUid,
                     it,
-                    encryption
+                    encryption,
+                    true
                 )
             }
             feedsDao.insert(listOfFeeds)

@@ -2,6 +2,7 @@ package com.raul.androidapps.softwareteststarling.persistence.entities
 
 import androidx.room.*
 import com.raul.androidapps.softwareteststarling.BuildConfig
+import com.raul.androidapps.softwareteststarling.extensions.getPotentialSavings
 import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.model.Money
 import com.raul.androidapps.softwareteststarling.security.Encryption
@@ -55,7 +56,12 @@ data class FeedsEntity constructor(
     @ColumnInfo(name = "country")
     var country: String?,
     @ColumnInfo(name = "spending_category")
-    var spendingCategory: String?
+    var spendingCategory: String?,
+    @Embedded(prefix = "potential_savings")
+    var potentialSavings: Money?,
+    @ColumnInfo(name = "sent_to_goal")
+    var sentToGoal: Boolean
+
 ) {
     companion object {
         /**
@@ -69,7 +75,8 @@ data class FeedsEntity constructor(
         fun fromAccountFeedUnencrypted(
             accountUid: String,
             feed: Feed,
-            encryption: Encryption
+            encryption: Encryption,
+            sentToGoal: Boolean
         ): FeedsEntity =
             FeedsEntity(
                 accountUid = accountUid,
@@ -137,7 +144,9 @@ data class FeedsEntity constructor(
                 spendingCategory = encryption.encryptString(
                     feed.spendingCategory,
                     BuildConfig.ENCRYPTION_ALIAS
-                )
+                ),
+                potentialSavings = feed.amount?.getPotentialSavings(),
+                sentToGoal = sentToGoal
             )
 
     }

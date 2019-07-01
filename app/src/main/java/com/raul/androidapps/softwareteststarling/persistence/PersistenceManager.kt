@@ -6,6 +6,7 @@ import com.raul.androidapps.softwareteststarling.network.responses.BalanceRespon
 import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
+import com.raul.androidapps.softwareteststarling.persistence.entities.FeedsEntity
 import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWithAllInfo
 
 interface PersistenceManager {
@@ -16,5 +17,6 @@ interface PersistenceManager {
     suspend fun saveBalance(accountId: String, balance: BalanceResponse?)
     suspend fun saveIdentifiers(accountId: String, identifiersResponse: IdentifiersResponse?)
     suspend fun saveFeeds(accountId: String, feedsResponse: FeedsResponse?)
+    suspend fun getFeed(feedId: String): FeedsEntity?
 
 }

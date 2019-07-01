@@ -81,16 +81,29 @@ class PersistenceManagerImpl @Inject constructor(
      * @param feedsResponse response fetched from the server
      */
     override suspend fun saveFeeds(accountId: String, feedsResponse: FeedsResponse?) {
-        val listOfFeeds = feedsResponse?.feedItems?.map {
-            FeedsEntity.fromAccountFeedUnencrypted(
-                accountId,
-                it,
-                encryption
+        val listOfFeeds: MutableList<FeedsEntity> = mutableListOf()
+        feedsResponse?.feedItems?.forEach {
+            val feedStored = getFeed(it.feedItemUid)
+            val sentToGoal = feedStored?.sentToGoal ?: false
+            listOfFeeds.add(
+                FeedsEntity.fromAccountFeedUnencrypted(
+                    accountId,
+                    it,
+                    encryption,
+                    sentToGoal
+                )
             )
         }
-        listOfFeeds?.let {
-            db.feedsDao().insert(it)
-        }
+        db.feedsDao().insert(listOfFeeds)
+
     }
+
+    /**
+     * return a feed from the db
+     * @param feedId feed id
+     * @return the stored feed, null if not present
+     */
+    override suspend fun getFeed(feedId: String): FeedsEntity? =
+        db.feedsDao().getFeed(feedId)
 }
 

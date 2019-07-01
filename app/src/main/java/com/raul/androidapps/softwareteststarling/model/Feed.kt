@@ -2,8 +2,8 @@ package com.raul.androidapps.softwareteststarling.model
 
 import java.util.*
 
-class Feed constructor(
-    val feedItemUid: String?,
+data class Feed constructor(
+    val feedItemUid: String,
     val categoryUid: String?,
     val amount: Money?,
     val sourceAmount: Money?,
