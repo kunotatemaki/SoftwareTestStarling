@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBinding
 import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecissionInStringFormat
+import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
 
@@ -20,11 +22,6 @@ class AccountFragment : BaseFragment() {
     private lateinit var viewModel: AccountViewModel
     private lateinit var networkViewModel: NetworkViewModel
     private lateinit var adapter: FeedsAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        adapter = FeedsAdapter(resourcesManager = resourcesManager, starlingBindingComponent = starlingBindingComponent)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +42,7 @@ class AccountFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AccountViewModel::class.java)
         networkViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(NetworkViewModel::class.java)
+        adapter = FeedsAdapter(resourcesManager = resourcesManager, starlingBindingComponent = starlingBindingComponent)
         binding.feedContainer.feedList.adapter = adapter
         binding.resources = resourcesManager
 
