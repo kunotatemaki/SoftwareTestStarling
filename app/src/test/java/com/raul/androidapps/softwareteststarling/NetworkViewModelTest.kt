@@ -6,6 +6,7 @@ import com.raul.androidapps.softwareteststarling.network.NetworkServiceFactory
 import com.raul.androidapps.softwareteststarling.network.StarlingApi
 import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
+import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.PersistenceManager
 import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
@@ -27,7 +28,7 @@ class NetworkViewModelTest {
 
     @Mock
     lateinit var persistenceManager: PersistenceManager
-    @Mockp
+    @Mock
     lateinit var networkServiceFactory: NetworkServiceFactory
     @Mock
     lateinit var starlingApi: StarlingApi
@@ -35,8 +36,10 @@ class NetworkViewModelTest {
     private lateinit var accountsResponse: AccountsResponse
     private lateinit var balanceResponse: BalanceResponse
     private lateinit var identifiersResponse: IdentifiersResponse
+    private lateinit var feedsResponse: FeedsResponse
     private lateinit var viewModelTest: NetworkViewModel
     private val accountUid = "accountUid"
+    private val categoryId = "catwegoryId"
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
@@ -59,6 +62,11 @@ class NetworkViewModelTest {
             this.javaClass.classLoader?.getResourceAsStream("account_identifiers.json")
         val stringIdentifiersResponse = inputAccountIdentifiersResponse?.convertToString()
         identifiersResponse = Gson().fromJson(stringIdentifiersResponse, IdentifiersResponse::class.java)
+
+        val inputAccountFeedsResponse =
+            this.javaClass.classLoader?.getResourceAsStream("feeds.json")
+        val stringFeedsResponse = inputAccountFeedsResponse?.convertToString()
+        feedsResponse = Gson().fromJson(stringFeedsResponse, FeedsResponse::class.java)
 
         Mockito.`when`(networkServiceFactory.getServiceInstance()).thenReturn(
             starlingApi
@@ -136,6 +144,30 @@ class NetworkViewModelTest {
             val response = viewModelTest.getAccountIdentifiersAsync(accountUid)
             response.join()
             verify(persistenceManager, times(0)).saveIdentifiers(accountUid, identifiersResponse)
+        }
+    }
+
+    @Test
+    fun accountFeedsResponseSuccess() {
+        runBlocking {
+            Mockito.`when`(starlingApi.getFeeds(accountUid, categoryId)).thenReturn(
+                Response.success(feedsResponse)
+            )
+            val response = viewModelTest.getAccountFeedsAsync(accountUid, categoryId)
+            response.join()
+            verify(persistenceManager, times(1)).saveFeeds(accountUid, feedsResponse)
+        }
+    }
+
+    @Test
+    fun accountFeedsResponseError() {
+        runBlocking {
+            Mockito.`when`(starlingApi.getFeeds(accountUid, categoryId)).thenReturn(
+                Response.error(400, ResponseBody.create(null, ""))
+            )
+            val response = viewModelTest.getAccountFeedsAsync(accountUid, categoryId)
+            response.join()
+            verify(persistenceManager, times(0)).saveFeeds(accountUid, feedsResponse)
         }
     }
 

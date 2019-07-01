@@ -7,13 +7,16 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
+import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.daos.AccountDao
 import com.raul.androidapps.softwareteststarling.persistence.daos.BalanceDao
+import com.raul.androidapps.softwareteststarling.persistence.daos.FeedsDao
 import com.raul.androidapps.softwareteststarling.persistence.daos.IdentifiersDao
 import com.raul.androidapps.softwareteststarling.persistence.databases.StarlingDatabase
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
 import com.raul.androidapps.softwareteststarling.persistence.entities.BalanceEntity
+import com.raul.androidapps.softwareteststarling.persistence.entities.FeedsEntity
 import com.raul.androidapps.softwareteststarling.persistence.entities.IdentifiersEntity
 import com.raul.androidapps.softwareteststarling.security.Encryption
 import com.raul.androidapps.softwareteststarling.utils.AssetFileUtil
@@ -38,12 +41,14 @@ class LocalDBTest {
 
     private lateinit var database: StarlingDatabase
     private lateinit var accountDao: AccountDao
+    private lateinit var feedsDao: FeedsDao
     private lateinit var identifiersDao: IdentifiersDao
     private lateinit var balanceDao: BalanceDao
 
     private lateinit var accountsResponse: AccountsResponse
     private lateinit var balanceResponse: BalanceResponse
     private lateinit var identifiersResponse: IdentifiersResponse
+    private lateinit var feedsResponse: FeedsResponse
     @Mock
     lateinit var encryption: Encryption
 
@@ -59,6 +64,7 @@ class LocalDBTest {
         accountDao = database.accountDao()
         identifiersDao = database.identifiersDao()
         balanceDao = database.balanceDao()
+        feedsDao = database.feedsDao()
     }
 
     @Before
@@ -77,6 +83,10 @@ class LocalDBTest {
         identifiersResponse =
             Gson().fromJson(stringIdentifiersResponse, IdentifiersResponse::class.java)
 
+        val stringFeedsResponse = assetsLoader.loadJSONFromAsset("feeds.json")
+        feedsResponse =
+            Gson().fromJson(stringFeedsResponse, FeedsResponse::class.java)
+
         Mockito.`when`(encryption.encryptString(anyString(), anyString()))
             .thenAnswer { i ->
                 i.getArgument<String>(0)
@@ -85,7 +95,6 @@ class LocalDBTest {
             .thenAnswer { i ->
                 i.getArgument<String>(0)
             }
-
 
     }
 
@@ -99,7 +108,7 @@ class LocalDBTest {
     @Throws(InterruptedException::class)
     fun getAccountEmpty() {
         runBlocking {
-            val list = accountDao.getAccounts()
+            val list = accountDao.getDistinctAccounts()
             assertEquals(list.getValueBlocking()?.size, 0)
         }
     }
@@ -109,7 +118,7 @@ class LocalDBTest {
     fun getAccount() {
         runBlocking {
             accountDao.insert(accountsResponse.accounts.map { AccountEntity.fromAccountResponse(it) })
-            val list = accountDao.getAccounts().getValueBlocking()
+            val list = accountDao.getDistinctAccounts().getValueBlocking()
             assertTrue(list?.size == 1)
             assertTrue(list?.firstOrNull()?.accountUid == accountsResponse.accounts.firstOrNull()?.accountUid)
 
@@ -118,7 +127,7 @@ class LocalDBTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getAccountWithAllInfo() {//todo transactions
+    fun getAccountWithAllInfo() {
         runBlocking {
             val accountUid = accountsResponse.accounts.firstOrNull()?.accountUid
             accountDao.insert(accountsResponse.accounts.map { AccountEntity.fromAccountResponse(it) })
@@ -135,7 +144,15 @@ class LocalDBTest {
                     balanceResponse
                 )
             )
-            val list = accountDao.getAccountsWithAllInfo().getValueBlocking()
+            val listOfFeeds = feedsResponse.feedItems.map {
+                FeedsEntity.fromAccountFeedUnencrypted(
+                    accountUid,
+                    it,
+                    encryption
+                )
+            }
+            feedsDao.insert(listOfFeeds)
+            val list = accountDao.getDistinctAccountsWithAllInfo().getValueBlocking()
             if (list.isNullOrEmpty()) {
                 assertTrue(false)
             }
@@ -143,11 +160,18 @@ class LocalDBTest {
                 val accountFromDb = account.toAccountPojo()
                 val identifiersFromDb =
                     identifiers.map { it.toAccountIdentifierUnencrypted(encryption) }
+                val feedsFromDb =
+                    feeds.map { it.toAccountFeedUnencrypted(encryption) }
                 val balanceFromDb = balance.map { it.toAccountBalance() }
                 assertTrue(list.size == 1)
                 assertTrue(accountFromDb == accountsResponse.accounts.firstOrNull())
                 assertTrue(identifiersFromDb.firstOrNull() == identifiersResponse)
                 assertTrue(balanceFromDb.firstOrNull() == balanceResponse)
+                val listOfFeedIds = feedsResponse.feedItems.mapNotNull { it.feedItemUid }
+                assertTrue(feedsFromDb.size == 30)
+                feedsFromDb.forEach {
+                    assertTrue(listOfFeedIds.contains(it.feedItemUid))
+                }
             }
 
         }
