@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+>
+    <data>
+        <variable name="balance" type="String"/>
+        <variable name="identifiers" type="com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse"/>
+        <variable name="resources" type="com.raul.androidapps.softwareteststarling.resources.ResourcesManager"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:showPaths="true"
+    >
+
+        <TextView
+                android:id="@+id/ibanText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/iban"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+        />
+
+        <TextView
+                android:id="@+id/iban"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:text="GB92SRLG60837187772983"
+                android:text="@{identifiers.iban}"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toEndOf="@id/ibanText"
+                app:layout_constraintTop_toTopOf="@id/ibanText"
+                app:layout_constraintBottom_toBottomOf="@id/ibanText"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
+                android:textSize="16sp"
+        />
+
+        <TextView
+                android:id="@+id/bicText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bic"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="@id/ibanText"
+                app:layout_constraintTop_toBottomOf="@id/ibanText"
+                android:layout_marginTop="4dp"
+                android:textSize="16sp"
+        />
+
+        <TextView
+                android:id="@+id/bic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:text="SRLGGB2L"
+                android:text="@{identifiers.bic}"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toEndOf="@id/bicText"
+                app:layout_constraintTop_toTopOf="@id/bicText"
+                app:layout_constraintBottom_toBottomOf="@id/bicText"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
+                android:textSize="16sp"
+        />
+
+        <TextView
+                android:id="@+id/balanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/balance"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="@id/ibanText"
+                app:layout_constraintTop_toBottomOf="@id/bicText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="4dp"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+        />
+
+        <TextView
+                android:id="@+id/balance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:text="300 GBP"
+                android:text="@{balance}"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toEndOf="@id/balanceText"
+                app:layout_constraintTop_toTopOf="@id/balanceText"
+                app:layout_constraintBottom_toBottomOf="@id/balanceText"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
+                android:textSize="16sp"
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
