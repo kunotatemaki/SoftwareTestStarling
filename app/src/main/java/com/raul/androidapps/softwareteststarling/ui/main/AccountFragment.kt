@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBinding
-import com.raul.androidapps.softwareteststarling.model.Account
+import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecissionInStringFormat
 import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
 
@@ -19,6 +19,12 @@ class AccountFragment : BaseFragment() {
 
     private lateinit var viewModel: AccountViewModel
     private lateinit var networkViewModel: NetworkViewModel
+    private lateinit var adapter: FeedsAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = FeedsAdapter(resourcesManager = resourcesManager, starlingBindingComponent = starlingBindingComponent)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,15 +45,25 @@ class AccountFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AccountViewModel::class.java)
         networkViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(NetworkViewModel::class.java)
+        binding.feedContainer.feedList.adapter = adapter
+        binding.resources = resourcesManager
 
-
-
-
-        viewModel.accounts.observe( this.viewLifecycleOwner, Observer {
+        viewModel.accounts.observe(this.viewLifecycleOwner, Observer {
             it?.let { list ->
                 //we are only reading the first account -> this app only handles one account per user
                 list.firstOrNull()?.let { accountEncrypted ->
-                    val account = Account.fromAccountEncrypted(accountEncrypted, encryption)
+                    val identifiers = accountEncrypted.identifiers
+                    binding.identifiers = identifiers.firstOrNull()?.toAccountIdentifierUnencrypted(encryption)
+                    accountEncrypted.balance.firstOrNull()?.toAccountBalance()?.amount?.let { amount ->
+                        val value = amount.minorUnits.toFloat() / 100
+                        binding.balance =
+                            "${value.getValueWithTwoDecimalsPrecissionInStringFormat()} ${amount.currency}"
+                    }
+                    if(accountEncrypted.feeds.isNotEmpty()) {
+                        val feeds = accountEncrypted.feeds.map { it.toAccountFeedUnencrypted(encryption) }
+                        adapter.updateItems(feeds)
+                    }
+                    binding.executePendingBindings()
                 }
             }
         })

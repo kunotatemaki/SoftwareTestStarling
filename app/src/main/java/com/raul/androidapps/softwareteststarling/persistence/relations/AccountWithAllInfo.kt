@@ -20,4 +20,5 @@ class AccountWithAllInfo {
 
     @Relation(parentColumn = "account_uid", entityColumn = "account_uid")
     var feeds: List<FeedsEntity> = mutableListOf()
+
 }

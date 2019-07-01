@@ -80,71 +80,35 @@ data class FeedsEntity constructor(
         ): FeedsEntity =
             FeedsEntity(
                 accountUid = accountUid,
-                feedItemUid = encryption.encryptString(
-                    feed.feedItemUid,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
-                categoryUid = encryption.encryptString(
-                    feed.categoryUid,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                feedItemUid =feed.feedItemUid,
+                categoryUid = feed.categoryUid,
                 amount = feed.amount,
                 sourceAmount = feed.sourceAmount,
-                direction = encryption.encryptString(
-                    feed.direction,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                direction = feed.direction,
                 updatedAt = feed.updatedAt,
                 transactionTime = feed.transactionTime,
                 settlementTime = feed.settlementTime,
-                source = encryption.encryptString(
-                    feed.source,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
-                status = encryption.encryptString(
-                    feed.status,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
-                counterPartyType = encryption.encryptString(
-                    feed.counterPartyType,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
-                counterPartyUid = encryption.encryptString(
-                    feed.counterPartyUid,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                source = feed.source,
+                status = feed.status,
+                counterPartyType = feed.counterPartyType,
+                counterPartyUid = feed.counterPartyUid,
                 counterPartyName = encryption.encryptString(
                     feed.counterPartyName,
                     BuildConfig.ENCRYPTION_ALIAS
                 ),
-                counterPartySubEntityUid = encryption.encryptString(
-                    feed.counterPartySubEntityUid,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                counterPartySubEntityUid = feed.counterPartySubEntityUid,
                 counterPartySubEntityName = encryption.encryptString(
                     feed.counterPartySubEntityName,
                     BuildConfig.ENCRYPTION_ALIAS
                 ),
-                counterPartySubEntityIdentifier = encryption.encryptString(
-                    feed.counterPartySubEntityIdentifier,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
-                counterPartySubEntitySubIdentifier = encryption.encryptString(
-                    feed.counterPartySubEntitySubIdentifier,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                counterPartySubEntityIdentifier = feed.counterPartySubEntityIdentifier,
+                counterPartySubEntitySubIdentifier = feed.counterPartySubEntitySubIdentifier,
                 reference = encryption.encryptString(
                     feed.reference,
                     BuildConfig.ENCRYPTION_ALIAS
                 ),
-                country = encryption.encryptString(
-                    feed.country,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
-                spendingCategory = encryption.encryptString(
-                    feed.spendingCategory,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                country = feed.country,
+                spendingCategory = feed.spendingCategory,
                 potentialSavings = feed.amount?.getPotentialSavings(),
                 sentToGoal = sentToGoal
             )
@@ -158,59 +122,29 @@ data class FeedsEntity constructor(
      */
     fun toAccountFeedUnencrypted(encryption: Encryption): Feed =
         Feed(
-            feedItemUid = encryption.decryptString(
-                this.feedItemUid,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
-            categoryUid = encryption.decryptString(
-                this.categoryUid,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
+            feedItemUid = this.feedItemUid,
+            categoryUid = this.categoryUid,
             amount = this.amount,
             sourceAmount = this.sourceAmount,
-            direction = encryption.decryptString(
-                this.direction,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
+            direction = this.direction,
             updatedAt = this.updatedAt,
             transactionTime = this.transactionTime,
             settlementTime = this.settlementTime,
-            source = encryption.decryptString(
-                this.source,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
-            status = encryption.decryptString(
-                this.status,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
-            counterPartyType = encryption.decryptString(
-                this.counterPartyType,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
-            counterPartyUid = encryption.decryptString(
-                this.counterPartyUid,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
+            source = this.source,
+            status = this.status,
+            counterPartyType = this.counterPartyType,
+            counterPartyUid = this.counterPartyUid,
             counterPartyName = encryption.decryptString(this.counterPartyName, BuildConfig.ENCRYPTION_ALIAS),
-            counterPartySubEntityUid = encryption.decryptString(
-                this.counterPartySubEntityUid,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
+            counterPartySubEntityUid = this.counterPartySubEntityUid,
             counterPartySubEntityName = encryption.decryptString(
                 this.counterPartySubEntityName,
                 BuildConfig.ENCRYPTION_ALIAS
             ),
-            counterPartySubEntityIdentifier = encryption.decryptString(
-                this.counterPartySubEntityIdentifier,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
-            counterPartySubEntitySubIdentifier = encryption.decryptString(
-                this.counterPartySubEntitySubIdentifier,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
+            counterPartySubEntityIdentifier = this.counterPartySubEntityIdentifier,
+            counterPartySubEntitySubIdentifier = this.counterPartySubEntitySubIdentifier,
             reference = encryption.decryptString(this.reference, BuildConfig.ENCRYPTION_ALIAS),
-            country = encryption.decryptString(this.country, BuildConfig.ENCRYPTION_ALIAS),
-            spendingCategory = encryption.decryptString(this.spendingCategory, BuildConfig.ENCRYPTION_ALIAS)
+            country = this.country,
+            spendingCategory = this.spendingCategory
         )
 
 
