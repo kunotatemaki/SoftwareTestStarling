@@ -33,6 +33,7 @@ class MainActivity : DaggerAppCompatActivity() {
                     //we are only reading the first account -> this app only handles one account per user
                     networkViewModel.getAccountIdentifiersAsync(account.accountUid)
                     networkViewModel.getAccountBalanceAsync(account.accountUid)
+                    networkViewModel.getAccountFeedsAsync(account.accountUid, account.defaultCategory)
                 }
             }
         }

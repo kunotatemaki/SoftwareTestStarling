@@ -54,8 +54,22 @@ class NetworkViewModel @Inject constructor(
             val identifiersResponse =
                 networkServiceFactory.getServiceInstance().getAccountIdentifiers(accountId)
             if (identifiersResponse.isSuccessful) {
-                Timber.d(identifiersResponse.body()?.toString())
                 persistenceManager.saveIdentifiers(accountId, identifiersResponse.body())
+            }
+        }
+
+
+    /**
+     * This function request the feeds for an account, and stores it in the database.
+     * @param accountId id of the account to be fetched
+     * @param categoryId id of the category for the feeds to be fetched
+     */
+    fun getAccountFeedsAsync(accountId: String, categoryId: String) =
+        viewModelScope.launch(Dispatchers.IO) {
+            val feedsResponse =
+                networkServiceFactory.getServiceInstance().getFeeds(accountId, categoryId)
+            if (feedsResponse.isSuccessful) {
+                persistenceManager.saveFeeds(accountId, feedsResponse.body())
             }
         }
 

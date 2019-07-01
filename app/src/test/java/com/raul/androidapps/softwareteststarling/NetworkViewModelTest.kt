@@ -27,7 +27,7 @@ class NetworkViewModelTest {
 
     @Mock
     lateinit var persistenceManager: PersistenceManager
-    @Mock
+    @Mockp
     lateinit var networkServiceFactory: NetworkServiceFactory
     @Mock
     lateinit var starlingApi: StarlingApi

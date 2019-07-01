@@ -1,7 +1,7 @@
 package com.raul.androidapps.softwareteststarling.persistence.entities
 
 import androidx.room.*
-import com.raul.androidapps.softwareteststarling.model.Balance
+import com.raul.androidapps.softwareteststarling.model.Money
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
 
 
@@ -14,17 +14,17 @@ data class BalanceEntity constructor(
     @ColumnInfo(name = "account_uid")
     val accountUid: String,
     @Embedded(prefix = "cleared_balance")
-    val clearedBalance: Balance?,
+    val clearedBalance: Money?,
     @Embedded(prefix = "effective_balance")
-    val effectiveBalance: Balance?,
+    val effectiveBalance: Money?,
     @Embedded(prefix = "pending_transactions")
-    val pendingTransactions: Balance?,
+    val pendingTransactions: Money?,
     @Embedded(prefix = "available_to_spend")
-    val availableToSpend: Balance?,
+    val availableToSpend: Money?,
     @Embedded(prefix = "accepted_overdraft")
-    val acceptedOverdraft: Balance?,
+    val acceptedOverdraft: Money?,
     @Embedded(prefix = "amount")
-    val amount: Balance?
+    val amount: Money?
 ) {
     companion object {
         /**

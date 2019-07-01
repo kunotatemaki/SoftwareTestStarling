@@ -3,10 +3,12 @@ package com.raul.androidapps.softwareteststarling.persistence
 import androidx.lifecycle.LiveData
 import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
+import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.databases.StarlingDatabase
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
 import com.raul.androidapps.softwareteststarling.persistence.entities.BalanceEntity
+import com.raul.androidapps.softwareteststarling.persistence.entities.FeedsEntity
 import com.raul.androidapps.softwareteststarling.persistence.entities.IdentifiersEntity
 import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWithAllInfo
 import com.raul.androidapps.softwareteststarling.security.Encryption
@@ -34,14 +36,14 @@ class PersistenceManagerImpl @Inject constructor(
      * @return list of accounts
      */
     override fun getAccountsWithAllInfo(): LiveData<List<AccountWithAllInfo>> =
-        db.accountDao().getAccountsWithAllInfo()
+        db.accountDao().getDistinctAccountsWithAllInfo()
 
     /**
      * return all accounts
      * @return list of accounts
      */
     override fun getAccounts(): LiveData<List<AccountEntity>> =
-        db.accountDao().getAccounts()
+        db.accountDao().getDistinctAccounts()
 
     /**
      * save account balance in the db. The sensible information is stored encrypted
@@ -73,5 +75,22 @@ class PersistenceManagerImpl @Inject constructor(
         db.identifiersDao().insert(identifiers)
     }
 
+    /**
+     * save account feeds in the db. The sensible information is stored encrypted
+     * @param accountId account id
+     * @param feedsResponse response fetched from the server
+     */
+    override suspend fun saveFeeds(accountId: String, feedsResponse: FeedsResponse?) {
+        val listOfFeeds = feedsResponse?.feedItems?.map {
+            FeedsEntity.fromAccountFeedUnencrypted(
+                accountId,
+                it,
+                encryption
+            )
+        }
+        listOfFeeds?.let {
+            db.feedsDao().insert(it)
+        }
+    }
 }
 

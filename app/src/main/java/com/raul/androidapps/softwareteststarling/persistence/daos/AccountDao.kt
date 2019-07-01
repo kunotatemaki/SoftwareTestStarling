@@ -3,6 +3,7 @@ package com.raul.androidapps.softwareteststarling.persistence.daos
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
+import com.raul.androidapps.softwareteststarling.extensions.getDistinct
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
 import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWithAllInfo
 
@@ -11,9 +12,15 @@ import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWi
 abstract class AccountDao : BaseDao<AccountEntity>() {
 
     @Query("SELECT * FROM account")
-    abstract fun getAccountsWithAllInfo(): LiveData<List<AccountWithAllInfo>>
+    protected abstract fun getAccountsWithAllInfo(): LiveData<List<AccountWithAllInfo>>
 
     @Query("SELECT * FROM account")
-    abstract fun getAccounts(): LiveData<List<AccountEntity>>
+    protected abstract fun getAccounts(): LiveData<List<AccountEntity>>
+
+    fun getDistinctAccountsWithAllInfo(): LiveData<List<AccountWithAllInfo>> =
+        getAccountsWithAllInfo().getDistinct()
+
+    fun getDistinctAccounts(): LiveData<List<AccountEntity>> =
+        getAccounts().getDistinct()
 
 }

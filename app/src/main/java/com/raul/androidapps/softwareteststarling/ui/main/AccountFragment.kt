@@ -12,7 +12,6 @@ import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBind
 import com.raul.androidapps.softwareteststarling.model.Account
 import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
-import timber.log.Timber
 
 class AccountFragment : BaseFragment() {
 
