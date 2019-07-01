@@ -15,7 +15,7 @@
         <include
                 android:id="@+id/headerLayout"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 layout="@layout/info_header"
                 app:layout_constraintTop_toTopOf="parent"
                 bind:balance="@{balance}"

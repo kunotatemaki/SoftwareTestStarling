@@ -39,6 +39,10 @@ class AccountFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AccountViewModel::class.java)
         networkViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(NetworkViewModel::class.java)
+
+
+
+
         viewModel.accounts.observe( this.viewLifecycleOwner, Observer {
             it?.let { list ->
                 //we are only reading the first account -> this app only handles one account per user
