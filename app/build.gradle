@@ -133,8 +133,6 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
-//    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-
 
 
 }

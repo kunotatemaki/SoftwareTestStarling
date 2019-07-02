@@ -1,6 +1,7 @@
 package com.raul.androidapps.softwareteststarling.ui.account
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +46,7 @@ class FeedsAdapter constructor(
 
     class FeedViewHolder constructor(
         private val binding: FeedItemBinding
-        ) : RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(feed: Feed, resourcesManager: ResourcesManager) {
             binding.feed = feed
             binding.resources = resourcesManager
@@ -53,10 +54,18 @@ class FeedsAdapter constructor(
                 val value = it.minorUnits.toFloat() / 100
                 val textAmount = " ${value.getValueWithTwoDecimalsPrecissionInStringFormat()} ${it.currency}"
                 binding.amount = textAmount
-                it.getPotentialSavings()?.let {saving ->
-                    val savingValue = saving.minorUnits.toFloat() / 100
-                    val textSaving = " ${savingValue.getValueWithTwoDecimalsPrecissionInStringFormat()} ${saving.currency}"
-                    binding.saving = textSaving
+                if (feed.direction == "OUT") {
+                    binding.savingsText.visibility = View.VISIBLE
+                    binding.savingsValue.visibility = View.VISIBLE
+                    it.getPotentialSavings()?.let { saving ->
+                        val savingValue = saving.minorUnits.toFloat() / 100
+                        val textSaving =
+                            " ${savingValue.getValueWithTwoDecimalsPrecissionInStringFormat()} ${saving.currency}"
+                        binding.saving = textSaving
+                    }
+                } else {
+                    binding.savingsText.visibility = View.GONE
+                    binding.savingsValue.visibility = View.GONE
                 }
             }
             binding.executePendingBindings()
