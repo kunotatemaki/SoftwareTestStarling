@@ -52,7 +52,9 @@ class SaveViewModel @Inject constructor(
     fun sendToGoal(accountUid: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (!preferencesManager.getBooleanFromPreferences(AppConstants.GOAL_ID)) {
-                networkServiceFactory.getServiceInstance().createGoal(accountUid, Goal())
+                val goal = networkServiceFactory.getServiceInstance().createGoal(accountUid, Goal())
+                if(goal.isSuccessful.not()) return@launch
+
             }
             val response =
                 networkServiceFactory.getServiceInstance().saveToGoal()
