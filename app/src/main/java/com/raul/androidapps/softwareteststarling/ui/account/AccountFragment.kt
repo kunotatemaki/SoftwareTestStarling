@@ -54,8 +54,9 @@ class AccountFragment : BaseFragment() {
 
         binding.savingButton.setOnClickListener {
             val accountUid = viewModel.accounts.value?.firstOrNull()?.account?.accountUid
-            if (accountUid != null) {
-                val direction = AccountFragmentDirections.actionAccountFragmentToSaveFragment(accountUid)
+            val currency = viewModel.accounts.value?.firstOrNull()?.account?.currency
+            if (accountUid != null && currency != null) {
+                val direction = AccountFragmentDirections.actionAccountFragmentToSaveFragment(accountUid, currency)
                 findNavController().navigate(direction)
             }else{
                 Toast.makeText(context, resourcesManager.getString(R.string.invalid_account), Toast.LENGTH_SHORT).show()

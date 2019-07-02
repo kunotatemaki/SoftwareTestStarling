@@ -1,6 +1,8 @@
 package com.raul.androidapps.softwareteststarling.persistence
 
 import androidx.lifecycle.LiveData
+import com.raul.androidapps.softwareteststarling.model.Direction
+import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
 import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
@@ -105,5 +107,25 @@ class PersistenceManagerImpl @Inject constructor(
      */
     override suspend fun getFeed(feedId: String): FeedsEntity? =
         db.feedsDao().getFeed(feedId)
+
+    /**
+     * get list of Feeds with OUT direction and not sent to goal yet
+     * @param accountId accountUid
+     * @return list of feeds wrapped in an observable
+     */
+    override fun getPotentialSavings(accountId: String): LiveData<List<FeedsEntity>> =
+        db.feedsDao().getPotentialSavings(accountId, Direction.OUT.value)
+
+    /**
+     * mark Feeds as sent to goal not to get them in #getPotentialSavings more than once
+     * @param accountId accountUid
+     * @return list of feeds wrapped in an observable
+     */
+    override suspend fun markFeedsAsSaved(feeds: List<FeedsEntity>?) {
+        feeds?.let {
+            db.feedsDao().markFeedsAsSaved(it.map { feed -> feed.feedItemUid })
+        }
+    }
+
 }
 

@@ -13,17 +13,17 @@ data class BalanceEntity constructor(
     @PrimaryKey
     @ColumnInfo(name = "account_uid")
     val accountUid: String,
-    @Embedded(prefix = "cleared_balance")
+    @Embedded(prefix = "cleared_balance_")
     val clearedBalance: Money?,
-    @Embedded(prefix = "effective_balance")
+    @Embedded(prefix = "effective_balance_")
     val effectiveBalance: Money?,
-    @Embedded(prefix = "pending_transactions")
+    @Embedded(prefix = "pending_transactions_")
     val pendingTransactions: Money?,
-    @Embedded(prefix = "available_to_spend")
+    @Embedded(prefix = "available_to_spend_")
     val availableToSpend: Money?,
-    @Embedded(prefix = "accepted_overdraft")
+    @Embedded(prefix = "accepted_overdraft_")
     val acceptedOverdraft: Money?,
-    @Embedded(prefix = "amount")
+    @Embedded(prefix = "amount_")
     val amount: Money?
 ) {
     companion object {

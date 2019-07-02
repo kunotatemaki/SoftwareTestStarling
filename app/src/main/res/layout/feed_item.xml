@@ -3,6 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="com.raul.androidapps.softwareteststarling.R" />
+        <import type="com.raul.androidapps.softwareteststarling.model.Direction" />
         <variable name="feed" type="com.raul.androidapps.softwareteststarling.model.Feed"/>
         <variable name="resources" type="com.raul.androidapps.softwareteststarling.resources.ResourcesManager"/>
         <variable name="amount" type="String"/>
@@ -66,7 +67,7 @@
                 tools:text="GBP"
                 tools:textColor="@color/colorOut"
                 android:text="@{amount}"
-                setTextColor="@{feed.direction.equals(`IN`)? resources.getColor(R.color.colorIn) : resources.getColor(R.color.colorOut)}"
+                setTextColor="@{feed.direction.equals(Direction.IN.value)? resources.getColor(R.color.colorIn) : resources.getColor(R.color.colorOut)}"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:layout_marginEnd="16dp"

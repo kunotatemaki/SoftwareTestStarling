@@ -10,6 +10,7 @@ import com.raul.androidapps.softwareteststarling.databinding.FeedItemBinding
 import com.raul.androidapps.softwareteststarling.databinding.StarlingBindingComponent
 import com.raul.androidapps.softwareteststarling.extensions.getPotentialSavings
 import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecissionInStringFormat
+import com.raul.androidapps.softwareteststarling.model.Direction
 import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.resources.ResourcesManager
 
@@ -54,7 +55,7 @@ class FeedsAdapter constructor(
                 val value = it.minorUnits.toFloat() / 100
                 val textAmount = " ${value.getValueWithTwoDecimalsPrecissionInStringFormat()} ${it.currency}"
                 binding.amount = textAmount
-                if (feed.direction == "OUT") {
+                if (feed.direction == Direction.OUT.value) {
                     binding.savingsText.visibility = View.VISIBLE
                     binding.savingsValue.visibility = View.VISIBLE
                     it.getPotentialSavings()?.let { saving ->

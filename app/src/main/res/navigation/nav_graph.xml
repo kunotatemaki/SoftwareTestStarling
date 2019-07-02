@@ -20,6 +20,7 @@
               tools:layout="@layout/save_fragment"
     >
         <argument android:name="account_uid" app:argType="string"/>
+        <argument android:name="currency" app:argType="string"/>
     </fragment>
 
 </navigation>

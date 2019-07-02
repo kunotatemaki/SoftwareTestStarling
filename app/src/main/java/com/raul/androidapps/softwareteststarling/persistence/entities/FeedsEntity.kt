@@ -3,6 +3,7 @@ package com.raul.androidapps.softwareteststarling.persistence.entities
 import androidx.room.*
 import com.raul.androidapps.softwareteststarling.BuildConfig
 import com.raul.androidapps.softwareteststarling.extensions.getPotentialSavings
+import com.raul.androidapps.softwareteststarling.model.Direction
 import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.model.Money
 import com.raul.androidapps.softwareteststarling.security.Encryption
@@ -21,9 +22,9 @@ data class FeedsEntity constructor(
     val feedItemUid: String,
     @ColumnInfo(name = "category_uid")
     var categoryUid: String?,
-    @Embedded(prefix = "amount")
+    @Embedded(prefix = "amount_")
     var amount: Money?,
-    @Embedded(prefix = "source_amount")
+    @Embedded(prefix = "source_amount_")
     var sourceAmount: Money?,
     @ColumnInfo(name = "direction")
     var direction: String?,
@@ -57,7 +58,7 @@ data class FeedsEntity constructor(
     var country: String?,
     @ColumnInfo(name = "spending_category")
     var spendingCategory: String?,
-    @Embedded(prefix = "potential_savings")
+    @Embedded(prefix = "potential_savings_")
     var potentialSavings: Money?,
     @ColumnInfo(name = "sent_to_goal")
     var sentToGoal: Boolean
@@ -109,7 +110,7 @@ data class FeedsEntity constructor(
                 ),
                 country = feed.country,
                 spendingCategory = feed.spendingCategory,
-                potentialSavings = feed.amount?.getPotentialSavings(),
+                potentialSavings = if(feed.direction == Direction.OUT.value) feed.amount?.getPotentialSavings() else null,
                 sentToGoal = sentToGoal
             )
 
