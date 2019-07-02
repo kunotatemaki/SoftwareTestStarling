@@ -6,4 +6,6 @@
     <string name="potential_saving">Potential Saving:</string>
     <string name="current_saving">Current Saving:</string>
     <string name="invalid_account">Invalid Account</string>
+    <string name="you_are_about_to_save">You are about to save:</string>
+    <string name="send_to_goal">Send to goal</string>
 </resources>
