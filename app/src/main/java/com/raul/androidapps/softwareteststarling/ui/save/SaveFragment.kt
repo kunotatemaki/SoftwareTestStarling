@@ -51,7 +51,7 @@ class SaveFragment : BaseFragment() {
         viewModel.getPotentialSavingsForAccount(accountUid)
 
         binding.saveButton.setOnClickListener {
-            viewModel.markFeedsAsSaved()
+            viewModel.sendToGoal()
         }
     }
 
