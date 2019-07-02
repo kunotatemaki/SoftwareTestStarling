@@ -18,6 +18,8 @@
               android:name="com.raul.androidapps.softwareteststarling.ui.save.SaveFragment"
               android:label="SaveFragment"
               tools:layout="@layout/save_fragment"
-    />
+    >
+        <argument android:name="account_uid" app:argType="string"/>
+    </fragment>
 
 </navigation>

@@ -5,4 +5,5 @@
     <string name="balance">BALANCE:</string>
     <string name="potential_saving">Potential Saving:</string>
     <string name="current_saving">Current Saving:</string>
+    <string name="invalid_account">Invalid Account</string>
 </resources>

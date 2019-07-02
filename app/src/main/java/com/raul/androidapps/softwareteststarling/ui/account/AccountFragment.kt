@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBinding
 import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecissionInStringFormat
@@ -51,8 +53,13 @@ class AccountFragment : BaseFragment() {
         (activity as? MainActivity)?.setBackArrow(false)
 
         binding.savingButton.setOnClickListener {
-            val direction = AccountFragmentDirections.actionAccountFragmentToSaveFragment()
-            findNavController().navigate(direction)
+            val accountUid = viewModel.accounts.value?.firstOrNull()?.account?.accountUid
+            if (accountUid != null) {
+                val direction = AccountFragmentDirections.actionAccountFragmentToSaveFragment(accountUid)
+                findNavController().navigate(direction)
+            }else{
+                Toast.makeText(context, resourcesManager.getString(R.string.invalid_account), Toast.LENGTH_SHORT).show()
+            }
         }
 
         viewModel.accounts.observe(this.viewLifecycleOwner, Observer {
