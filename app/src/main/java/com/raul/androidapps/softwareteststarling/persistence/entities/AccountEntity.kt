@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
+import com.raul.androidapps.softwareteststarling.model.Account
 import java.util.*
 
 
@@ -27,7 +27,7 @@ data class AccountEntity constructor(
          * @return info ready to be stored in the db
          */
         @JvmStatic
-        fun fromAccountResponse(account: AccountsResponse.Account): AccountEntity =
+        fun fromAccountResponse(account: Account): AccountEntity =
             AccountEntity(
                 accountUid = account.accountUid,
                 defaultCategory = account.defaultCategory,
@@ -40,8 +40,8 @@ data class AccountEntity constructor(
      * pojo info from the entity
      * @return POJO with plain text
      */
-    fun toAccountPojo(): AccountsResponse.Account =
-        AccountsResponse.Account(
+    fun toAccountPojo(): Account =
+        Account(
             accountUid = this.accountUid,
             defaultCategory = this.defaultCategory,
             currency = this.currency,

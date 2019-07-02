@@ -1,19 +1,21 @@
-package com.raul.androidapps.softwareteststarling.ui.main
+package com.raul.androidapps.softwareteststarling.ui.account
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBinding
 import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecissionInStringFormat
-import com.raul.androidapps.softwareteststarling.model.Feed
+import com.raul.androidapps.softwareteststarling.ui.MainActivity
 import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
+import kotlinx.coroutines.async
 
 class AccountFragment : BaseFragment() {
 
@@ -46,25 +48,49 @@ class AccountFragment : BaseFragment() {
         binding.feedContainer.feedList.adapter = adapter
         binding.resources = resourcesManager
 
+        (activity as? MainActivity)?.setBackArrow(false)
+
+        binding.savingButton.setOnClickListener {
+            val direction = AccountFragmentDirections.actionAccountFragmentToSaveFragment()
+            findNavController().navigate(direction)
+        }
+
         viewModel.accounts.observe(this.viewLifecycleOwner, Observer {
             it?.let { list ->
                 //we are only reading the first account -> this app only handles one account per user
                 list.firstOrNull()?.let { accountEncrypted ->
-                    val identifiers = accountEncrypted.identifiers
-                    binding.identifiers = identifiers.firstOrNull()?.toAccountIdentifierUnencrypted(encryption)
-                    accountEncrypted.balance.firstOrNull()?.toAccountBalance()?.amount?.let { amount ->
-                        val value = amount.minorUnits.toFloat() / 100
-                        binding.balance =
-                            "${value.getValueWithTwoDecimalsPrecissionInStringFormat()} ${amount.currency}"
+                    this.lifecycleScope.launchWhenCreated {
+                        val identifiers = accountEncrypted.identifiers
+                        //prepare and pass balance to binding
+                        async {
+                            viewModel.getBalanceFromEntity(accountEncrypted.balance.firstOrNull())
+                                ?.amount?.let { amount ->
+                                val value = amount.minorUnits.toFloat() / 100
+                                binding.balance =
+                                    "${value.getValueWithTwoDecimalsPrecissionInStringFormat()} ${amount.currency}"
+                                binding.executePendingBindings()
+                            }
+                        }
+                        //prepare and pass identifiers to binding
+                        async {
+                            binding.identifiers =
+                                viewModel.getIdentifiersFromEntity(identifiers.firstOrNull(), encryption)
+                            binding.executePendingBindings()
+                        }
+                        //prepare and pass feeds
+                        async {
+                            viewModel.getFeedsFromEntities(accountEncrypted.feeds, encryption)
+                        }
                     }
-                    if(accountEncrypted.feeds.isNotEmpty()) {
-                        val feeds = accountEncrypted.feeds.map { it.toAccountFeedUnencrypted(encryption) }
-                        adapter.updateItems(feeds)
-                    }
-                    binding.executePendingBindings()
                 }
             }
         })
+        viewModel.getListOfFeeds().observe(this.viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.updateItems(it)
+            }
+        })
     }
+
 
 }

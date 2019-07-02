@@ -1,6 +1,7 @@
 package com.raul.androidapps.softwareteststarling.ui
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.raul.androidapps.softwareteststarling.R
@@ -38,6 +39,20 @@ class MainActivity : DaggerAppCompatActivity() {
             }
         }
         networkViewModel.getAccountsAsync()
+    }
+
+    fun setBackArrow(visible: Boolean){
+        supportActionBar?.setDisplayHomeAsUpEnabled(visible)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }

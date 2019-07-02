@@ -6,7 +6,18 @@
             app:startDestination="@id/account_fragment">
 
     <fragment android:id="@+id/account_fragment"
-              android:name="com.raul.androidapps.softwareteststarling.ui.main.AccountFragment"
-              android:label="account_fragment" tools:layout="@layout/account_fragment"/>
+              android:name="com.raul.androidapps.softwareteststarling.ui.account.AccountFragment"
+              android:label="account_fragment"
+              tools:layout="@layout/account_fragment">
+        <action android:id="@+id/action_account_fragment_to_saveFragment" app:destination="@id/saveFragment"
+                app:launchSingleTop="true" app:popUpTo="@+id/account_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"/>
+    </fragment>
+    <fragment android:id="@+id/saveFragment"
+              android:name="com.raul.androidapps.softwareteststarling.ui.save.SaveFragment"
+              android:label="SaveFragment"
+              tools:layout="@layout/save_fragment"
+    />
 
 </navigation>

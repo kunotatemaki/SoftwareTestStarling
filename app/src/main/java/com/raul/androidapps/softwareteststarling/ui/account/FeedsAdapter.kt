@@ -1,4 +1,4 @@
-package com.raul.androidapps.softwareteststarling.ui.main
+package com.raul.androidapps.softwareteststarling.ui.account
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

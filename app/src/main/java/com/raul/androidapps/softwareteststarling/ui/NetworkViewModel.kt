@@ -8,7 +8,6 @@ import com.raul.androidapps.softwareteststarling.persistence.PersistenceManager
 import com.raul.androidapps.softwareteststarling.persistence.entities.AccountEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class NetworkViewModel @Inject constructor(
