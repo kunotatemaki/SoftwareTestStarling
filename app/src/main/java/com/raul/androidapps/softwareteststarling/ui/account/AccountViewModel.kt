@@ -41,9 +41,9 @@ class AccountViewModel @Inject constructor(
             identifiers?.toAccountIdentifierUnencrypted(encryption)
         }
 
-    suspend fun getFeedsFromEntities(list: List<FeedsEntity>, encryption: Encryption) =
+    suspend fun getFeedsFromEntities(list: List<FeedsEntity>) =
         withContext(Dispatchers.Default) {
-            listOfFeeds.postValue(list.map { it.toAccountFeedUnencrypted(encryption) })
+            listOfFeeds.postValue(list.map { it.toAccountFeedUnencrypted() })
         }
 
 }

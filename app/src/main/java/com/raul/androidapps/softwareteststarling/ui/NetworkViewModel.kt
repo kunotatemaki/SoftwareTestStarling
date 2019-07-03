@@ -29,7 +29,9 @@ class NetworkViewModel @Inject constructor(
 
     private val accounts: LiveData<List<AccountEntity>> = persistenceManager.getAccounts()
     private val networkError: MutableLiveData<String> = MutableLiveData()
+    private val networkCallInProgress: MutableLiveData<Boolean> = MutableLiveData()
 
+    fun getNetworkCallInProgress() = networkCallInProgress
     fun getAccountsAsObservable() = accounts
     fun resetError() {
         networkError.value = null
@@ -103,6 +105,7 @@ class NetworkViewModel @Inject constructor(
      */
     fun sendToGoal(accountUid: String, feedsIds: List<String>, amount: Long, currency: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            showProgressBar()
             var goalId: String = preferencesManager.getStringFromPreferences(AppConstants.GOAL_ID)
             if (goalId.isBlank()) {
                 //create the default goal
@@ -110,6 +113,7 @@ class NetworkViewModel @Inject constructor(
                 if (goal.isSuccessful.not() || goal.body()?.success == false || goal.body()?.savingsGoalUid == null) {
                     networkError.postValue(resourcesManager.getString(R.string.error_sending_goal))
                     Timber.e("Error creating goal")
+                    hideProgressBar()
                     return@launch
                 } else {
                     goalId = goal.body()?.savingsGoalUid ?: return@launch
@@ -118,21 +122,28 @@ class NetworkViewModel @Inject constructor(
             }
             //create recurrent transfer
             val transfer =
-                networkServiceFactory.getServiceInstance().createTransfer(accountUid, goalId, TransferBody(currency = currency, amount = amount))
+                networkServiceFactory.getServiceInstance()
+                    .createTransfer(accountUid, goalId, TransferBody(currency = currency, amount = amount))
             val transferId: String
             if (transfer.isSuccessful.not() || transfer.body()?.success == false) {
                 networkError.postValue(resourcesManager.getString(R.string.error_sending_goal))
                 Timber.e("Error creating transfer")
+                hideProgressBar()
                 return@launch
             }
             transferId = transfer.body()?.transferUid ?: return@launch
             //make the payment
             val payment =
-                networkServiceFactory.getServiceInstance().saveToGoal(accountUid, goalId, transferId, SavingBody(amount = Money(currency = currency, minorUnits = amount)))
+                networkServiceFactory.getServiceInstance().saveToGoal(
+                    accountUid,
+                    goalId,
+                    transferId,
+                    SavingBody(amount = Money(currency = currency, minorUnits = amount))
+                )
             if (payment.isSuccessful.not() || payment.body()?.success == false) {
                 networkError.postValue(resourcesManager.getString(R.string.error_sending_goal))
                 Timber.e("Error sending money")
-            }else {
+            } else {
                 //mark feeds as saved
                 persistenceManager.markFeedsAsSaved(feedsIds)
             }
@@ -142,8 +153,16 @@ class NetworkViewModel @Inject constructor(
             if (delete.isSuccessful.not()) {
                 Timber.e("Error deleting transfer")
             }
+            hideProgressBar()
         }
     }
 
+    private fun showProgressBar() {
+        networkCallInProgress.postValue(true)
+    }
+
+    private fun hideProgressBar() {
+        networkCallInProgress.postValue(false)
+    }
 
 }

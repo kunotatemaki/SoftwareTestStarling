@@ -18,7 +18,10 @@ data class AccountEntity constructor(
     @ColumnInfo(name = "currency")
     var currency: String,
     @ColumnInfo(name = "created_at")
-    var createdAt: Date
+    var createdAt: Date,
+    @ColumnInfo(name = "last_fetched_at")
+    var lastFetched: Date
+
 ) {
     companion object {
         /**
@@ -32,7 +35,8 @@ data class AccountEntity constructor(
                 accountUid = account.accountUid,
                 defaultCategory = account.defaultCategory,
                 currency = account.currency,
-                createdAt = account.createdAt
+                createdAt = account.createdAt,
+                lastFetched = Date()
             )
     }
 

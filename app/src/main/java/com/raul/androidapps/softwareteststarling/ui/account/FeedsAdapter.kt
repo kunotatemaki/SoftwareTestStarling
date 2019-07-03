@@ -10,7 +10,6 @@ import com.raul.androidapps.softwareteststarling.databinding.FeedItemBinding
 import com.raul.androidapps.softwareteststarling.databinding.StarlingBindingComponent
 import com.raul.androidapps.softwareteststarling.extensions.getPotentialSavings
 import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecisionInStringFormat
-import com.raul.androidapps.softwareteststarling.model.Direction
 import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.model.SavingState
 import com.raul.androidapps.softwareteststarling.resources.ResourcesManager

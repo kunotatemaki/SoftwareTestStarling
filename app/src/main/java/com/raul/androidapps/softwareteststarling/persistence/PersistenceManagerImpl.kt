@@ -97,7 +97,6 @@ class PersistenceManagerImpl @Inject constructor(
                 FeedsEntity.fromAccountFeedUnencrypted(
                     accountId,
                     it,
-                    encryption,
                     availableForSaving
                 )
             )

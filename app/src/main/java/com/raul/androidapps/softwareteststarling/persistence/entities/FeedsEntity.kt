@@ -8,7 +8,6 @@ import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.model.Money
 import com.raul.androidapps.softwareteststarling.model.SavingState
 import com.raul.androidapps.softwareteststarling.security.Encryption
-import com.raul.androidapps.softwareteststarling.utils.AppConstants
 import java.util.*
 
 
@@ -71,19 +70,17 @@ data class FeedsEntity constructor(
          * convert a POJO with info from the server in encrypted info to store in the db
          * @param accountUid account uid to build the relationship between tables
          * @param feed plain text info from the server
-         * @param encryption class for encrypt/decrypt
          * @return encrypted info ready to be stored in the db
          */
         @JvmStatic
         fun fromAccountFeedUnencrypted(
             accountUid: String,
             feed: Feed,
-            encryption: Encryption,
             availableForSavingValue: Int
         ): FeedsEntity =
             FeedsEntity(
                 accountUid = accountUid,
-                feedItemUid =feed.feedItemUid,
+                feedItemUid = feed.feedItemUid,
                 categoryUid = feed.categoryUid,
                 amount = feed.amount,
                 sourceAmount = feed.sourceAmount,
@@ -95,24 +92,15 @@ data class FeedsEntity constructor(
                 status = feed.status,
                 counterPartyType = feed.counterPartyType,
                 counterPartyUid = feed.counterPartyUid,
-                counterPartyName = encryption.encryptString(
-                    feed.counterPartyName,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                counterPartyName = feed.counterPartyName,
                 counterPartySubEntityUid = feed.counterPartySubEntityUid,
-                counterPartySubEntityName = encryption.encryptString(
-                    feed.counterPartySubEntityName,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                counterPartySubEntityName = feed.counterPartySubEntityName,
                 counterPartySubEntityIdentifier = feed.counterPartySubEntityIdentifier,
                 counterPartySubEntitySubIdentifier = feed.counterPartySubEntitySubIdentifier,
-                reference = encryption.encryptString(
-                    feed.reference,
-                    BuildConfig.ENCRYPTION_ALIAS
-                ),
+                reference = feed.reference,
                 country = feed.country,
                 spendingCategory = feed.spendingCategory,
-                potentialSavings = if(feed.direction == Direction.OUT.value) feed.amount?.getPotentialSavings() else null,
+                potentialSavings = if (feed.direction == Direction.OUT.value) feed.amount?.getPotentialSavings() else null,
                 availableForSaving = availableForSavingValue
             )
 
@@ -120,10 +108,9 @@ data class FeedsEntity constructor(
 
     /**
      * decrypt info from the db and return it as a POJO
-     * @param encryption class for encrypt/decrypt
      * @return POJO with plain text
      */
-    fun toAccountFeedUnencrypted(encryption: Encryption): Feed =
+    fun toAccountFeedUnencrypted(): Feed =
         Feed(
             feedItemUid = this.feedItemUid,
             categoryUid = this.categoryUid,
@@ -137,15 +124,12 @@ data class FeedsEntity constructor(
             status = this.status,
             counterPartyType = this.counterPartyType,
             counterPartyUid = this.counterPartyUid,
-            counterPartyName = encryption.decryptString(this.counterPartyName, BuildConfig.ENCRYPTION_ALIAS),
+            counterPartyName = this.counterPartyName,
             counterPartySubEntityUid = this.counterPartySubEntityUid,
-            counterPartySubEntityName = encryption.decryptString(
-                this.counterPartySubEntityName,
-                BuildConfig.ENCRYPTION_ALIAS
-            ),
+            counterPartySubEntityName = this.counterPartySubEntityName,
             counterPartySubEntityIdentifier = this.counterPartySubEntityIdentifier,
             counterPartySubEntitySubIdentifier = this.counterPartySubEntitySubIdentifier,
-            reference = encryption.decryptString(this.reference, BuildConfig.ENCRYPTION_ALIAS),
+            reference = this.reference,
             country = this.country,
             spendingCategory = this.spendingCategory,
             potentialSavings = this.potentialSavings,

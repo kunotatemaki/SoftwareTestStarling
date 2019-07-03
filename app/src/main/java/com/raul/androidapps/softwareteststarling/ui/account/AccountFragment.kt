@@ -97,7 +97,7 @@ class AccountFragment : BaseFragment() {
                         }
                         //prepare and pass feeds
                         async {
-                            viewModel.getFeedsFromEntities(accountEncrypted.feeds, encryption)
+                            viewModel.getFeedsFromEntities(accountEncrypted.feeds)
                         }
                     }
                 }
@@ -108,6 +108,7 @@ class AccountFragment : BaseFragment() {
                 adapter.updateItems(it)
             }
         })
+
     }
 
     override fun onResume() {

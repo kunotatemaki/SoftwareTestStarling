@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.SaveFragmentBinding
 import com.raul.androidapps.softwareteststarling.ui.MainActivity
-import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
 
 class SaveFragment : BaseFragment() {
@@ -48,6 +47,7 @@ class SaveFragment : BaseFragment() {
             it?.let {
                 viewLifecycleOwner.lifecycleScope.launchWhenCreated {
                     binding.potentialSaving.text = viewModel.getSavingsFromListAsString(it, currency)
+                    checkButton()
                 }
             }
         })
@@ -55,9 +55,22 @@ class SaveFragment : BaseFragment() {
 
         binding.saveButton.setOnClickListener {
             viewModel.getPotentialSavingAsObservable().value?.let { feeds ->
-                (activity as? MainActivity)?.getViewModel()?.sendToGoal(accountUid, feeds.map { it.feedItemUid }, viewModel.getSavingsAmount(), currency)
+                (activity as? MainActivity)?.getViewModel()
+                    ?.sendToGoal(accountUid, feeds.map { it.feedItemUid }, viewModel.getSavingsAmount(), currency)
             }
         }
+
+        //for hiding the button
+        (activity as? MainActivity)?.getViewModel()?.getNetworkCallInProgress()
+            ?.observe(this.viewLifecycleOwner, Observer {
+                it?.let {
+                    checkButton()
+                }
+            })
+    }
+
+    private fun checkButton(){
+        binding.saveButton.isEnabled = (activity as? MainActivity)?.getViewModel()?.getNetworkCallInProgress()?.value != true && viewModel.getSavingsAmount() > 0
     }
 
 
