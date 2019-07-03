@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
+import com.raul.androidapps.softwareteststarling.model.SavingState
 import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
 import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
@@ -130,10 +131,10 @@ class LocalDBTest {
     fun getFeed() {
         runBlocking {
             val accountUid = "accountUid"
-            feedsDao.insert(FeedsEntity.fromAccountFeedUnencrypted(accountUid, feedsResponse.feedItems.first(), encryption, false))
+            feedsDao.insert(FeedsEntity.fromAccountFeedUnencrypted(accountUid, feedsResponse.feedItems.first(), SavingState.SAVED.value))
             val feed = feedsDao.getFeed(feedsResponse.feedItems.first().feedItemUid)
-            val feedPojo = feed.toAccountFeedUnencrypted(encryption)
-            assertTrue(feedsResponse.feedItems.first() == feedPojo)
+            val feedPojo = feed.toAccountFeedUnencrypted()
+            assertTrue(feedsResponse.feedItems.first().feedItemUid == feedPojo.feedItemUid)
 
         }
     }
@@ -161,8 +162,7 @@ class LocalDBTest {
                 FeedsEntity.fromAccountFeedUnencrypted(
                     accountUid,
                     it,
-                    encryption,
-                    true
+                    SavingState.AVAILABLE.value
                 )
             }
             feedsDao.insert(listOfFeeds)
@@ -175,13 +175,13 @@ class LocalDBTest {
                 val identifiersFromDb =
                     identifiers.map { it.toAccountIdentifierUnencrypted(encryption) }
                 val feedsFromDb =
-                    feeds.map { it.toAccountFeedUnencrypted(encryption) }
+                    feeds.map { it.toAccountFeedUnencrypted() }
                 val balanceFromDb = balance.map { it.toAccountBalance() }
                 assertTrue(list.size == 1)
                 assertTrue(accountFromDb == accountsResponse.accounts.firstOrNull())
                 assertTrue(identifiersFromDb.firstOrNull() == identifiersResponse)
                 assertTrue(balanceFromDb.firstOrNull() == balanceResponse)
-                val listOfFeedIds = feedsResponse.feedItems.mapNotNull { it.feedItemUid }
+                val listOfFeedIds = feedsResponse.feedItems.map { it.feedItemUid }
                 assertTrue(feedsFromDb.size == 30)
                 feedsFromDb.forEach {
                     assertTrue(listOfFeedIds.contains(it.feedItemUid))

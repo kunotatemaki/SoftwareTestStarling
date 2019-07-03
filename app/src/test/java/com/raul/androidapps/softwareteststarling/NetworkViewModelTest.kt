@@ -9,6 +9,8 @@ import com.raul.androidapps.softwareteststarling.network.responses.BalanceRespon
 import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.IdentifiersResponse
 import com.raul.androidapps.softwareteststarling.persistence.PersistenceManager
+import com.raul.androidapps.softwareteststarling.preferences.PreferencesManager
+import com.raul.androidapps.softwareteststarling.resources.ResourcesManager
 import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
@@ -31,6 +33,10 @@ class NetworkViewModelTest {
     @Mock
     lateinit var networkServiceFactory: NetworkServiceFactory
     @Mock
+    lateinit var preferencesManager: PreferencesManager
+    @Mock
+    lateinit var resourcesManager: ResourcesManager
+    @Mock
     lateinit var starlingApi: StarlingApi
 
     private lateinit var accountsResponse: AccountsResponse
@@ -48,7 +54,8 @@ class NetworkViewModelTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         viewModelTest =
-            NetworkViewModel(persistenceManager = persistenceManager, networkServiceFactory = networkServiceFactory)
+            NetworkViewModel(persistenceManager = persistenceManager, networkServiceFactory = networkServiceFactory,
+                preferencesManager = preferencesManager, resourcesManager = resourcesManager)
 
         val inputAccountsResponse = this.javaClass.classLoader?.getResourceAsStream("accounts.json")
         val stringAccountsResponse = inputAccountsResponse?.convertToString() ?: ""
