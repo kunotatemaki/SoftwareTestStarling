@@ -43,6 +43,10 @@ android {
         enabled = true
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     buildToolsVersion = '28.0.3'
 }
 
