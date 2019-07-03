@@ -103,7 +103,7 @@ class NetworkViewModel @Inject constructor(
      * @param amount amount of money to be saved
      * @param currency currency code
      */
-    fun sendToGoal(accountUid: String, feedsIds: List<String>, amount: Long, currency: String) {
+    fun sendToGoal(accountUid: String, feedsIds: List<String>, amount: Long, currency: String) =
         viewModelScope.launch(Dispatchers.IO) {
             showProgressBar()
             var goalId: String = preferencesManager.getStringFromPreferences(AppConstants.GOAL_ID)
@@ -123,7 +123,11 @@ class NetworkViewModel @Inject constructor(
             //create recurrent transfer
             val transfer =
                 networkServiceFactory.getServiceInstance()
-                    .createTransfer(accountUid, goalId, TransferBody(currency = currency, amount = amount))
+                    .createTransfer(
+                        accountUid,
+                        goalId,
+                        TransferBody(currency = currency, amount = amount)
+                    )
             val transferId: String
             if (transfer.isSuccessful.not() || transfer.body()?.success == false) {
                 networkError.postValue(resourcesManager.getString(R.string.error_sending_goal))
@@ -149,13 +153,14 @@ class NetworkViewModel @Inject constructor(
             }
 
             //delete transfer
-            val delete = networkServiceFactory.getServiceInstance().deleteTransfer(accountUid, goalId)
+            val delete =
+                networkServiceFactory.getServiceInstance().deleteTransfer(accountUid, goalId)
             if (delete.isSuccessful.not()) {
                 Timber.e("Error deleting transfer")
             }
             hideProgressBar()
         }
-    }
+
 
     private fun showProgressBar() {
         networkCallInProgress.postValue(true)
