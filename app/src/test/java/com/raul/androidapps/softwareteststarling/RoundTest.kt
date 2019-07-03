@@ -78,7 +78,7 @@ class RoundTest {
     fun getPotentialSavingText(){
         val money = 0.51F
         val text = money.getValueWithTwoDecimalsPrecisionInStringFormat()
-        Assert.assertEquals(text, "0.51")
+        Assert.assertEquals(text, "0,51")
     }
 
 }
