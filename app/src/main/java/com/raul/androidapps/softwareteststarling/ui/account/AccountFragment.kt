@@ -10,14 +10,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.AccountFragmentBinding
-import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecissionInStringFormat
+import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecisionInStringFormat
 import com.raul.androidapps.softwareteststarling.ui.MainActivity
 import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
 import kotlinx.coroutines.async
+
 
 class AccountFragment : BaseFragment() {
 
@@ -47,7 +50,14 @@ class AccountFragment : BaseFragment() {
         networkViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(NetworkViewModel::class.java)
         adapter = FeedsAdapter(resourcesManager = resourcesManager, starlingBindingComponent = starlingBindingComponent)
-        binding.feedContainer.feedList.adapter = adapter
+        binding.feedContainer.feedList.apply {
+            adapter = this@AccountFragment.adapter
+            val dividerItemDecoration = DividerItemDecoration(
+                context,
+                LinearLayoutManager.VERTICAL
+            )
+            addItemDecoration(dividerItemDecoration)
+        }
         binding.resources = resourcesManager
 
         (activity as? MainActivity)?.setBackArrow(false)
@@ -58,7 +68,7 @@ class AccountFragment : BaseFragment() {
             if (accountUid != null && currency != null) {
                 val direction = AccountFragmentDirections.actionAccountFragmentToSaveFragment(accountUid, currency)
                 findNavController().navigate(direction)
-            }else{
+            } else {
                 Toast.makeText(context, resourcesManager.getString(R.string.invalid_account), Toast.LENGTH_SHORT).show()
             }
         }
@@ -75,7 +85,7 @@ class AccountFragment : BaseFragment() {
                                 ?.amount?.let { amount ->
                                 val value = amount.minorUnits.toFloat() / 100
                                 binding.balance =
-                                    "${value.getValueWithTwoDecimalsPrecissionInStringFormat()} ${amount.currency}"
+                                    "${value.getValueWithTwoDecimalsPrecisionInStringFormat()} ${amount.currency}"
                                 binding.executePendingBindings()
                             }
                         }
@@ -98,6 +108,11 @@ class AccountFragment : BaseFragment() {
                 adapter.updateItems(it)
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.getInfoFromServer()
     }
 
 

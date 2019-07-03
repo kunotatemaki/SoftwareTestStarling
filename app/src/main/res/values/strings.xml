@@ -8,4 +8,5 @@
     <string name="invalid_account">Invalid Account</string>
     <string name="you_are_about_to_save">You are about to save:</string>
     <string name="send_to_goal">Send to goal</string>
+    <string name="error_sending_goal">Operation not performed</string>
 </resources>

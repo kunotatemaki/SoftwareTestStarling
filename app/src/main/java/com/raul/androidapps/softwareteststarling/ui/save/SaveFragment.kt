@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.databinding.SaveFragmentBinding
 import com.raul.androidapps.softwareteststarling.ui.MainActivity
+import com.raul.androidapps.softwareteststarling.ui.NetworkViewModel
 import com.raul.androidapps.softwareteststarling.ui.common.BaseFragment
 
 class SaveFragment : BaseFragment() {
@@ -18,13 +19,15 @@ class SaveFragment : BaseFragment() {
 
     private lateinit var viewModel: SaveViewModel
     private lateinit var binding: SaveFragmentBinding
-    private var accountUid: String? = null
+    private lateinit var accountUid: String
+    private lateinit var currency: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.apply {
             val bundle = SaveFragmentArgs.fromBundle(this)
             accountUid = bundle.accountUid
+            currency = bundle.currency
         }
 
     }
@@ -41,17 +44,19 @@ class SaveFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SaveViewModel::class.java)
         (activity as? MainActivity)?.setBackArrow(true)
-        viewModel.getPotentialSaving().observe(this.viewLifecycleOwner, Observer {
+        viewModel.getPotentialSavingAsObservable().observe(this.viewLifecycleOwner, Observer {
             it?.let {
                 viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-                    binding.potentialSaving.text = viewModel.getSavingsFromList(it).toString()
+                    binding.potentialSaving.text = viewModel.getSavingsFromListAsString(it, currency)
                 }
             }
         })
         viewModel.getPotentialSavingsForAccount(accountUid)
 
         binding.saveButton.setOnClickListener {
-            viewModel.sendToGoal()
+            viewModel.getPotentialSavingAsObservable().value?.let { feeds ->
+                (activity as? MainActivity)?.getViewModel()?.sendToGoal(accountUid, feeds.map { it.feedItemUid }, viewModel.getSavingsAmount(), currency)
+            }
         }
     }
 

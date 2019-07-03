@@ -1,7 +1,7 @@
 package com.raul.androidapps.softwareteststarling
 
 import com.raul.androidapps.softwareteststarling.extensions.getPotentialSavings
-import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecissionInStringFormat
+import com.raul.androidapps.softwareteststarling.extensions.getValueWithTwoDecimalsPrecisionInStringFormat
 import com.raul.androidapps.softwareteststarling.model.Money
 import org.junit.Assert
 import org.junit.Test
@@ -77,7 +77,7 @@ class RoundTest {
     @Test
     fun getPotentialSavingText(){
         val money = 0.51F
-        val text = money.getValueWithTwoDecimalsPrecissionInStringFormat()
+        val text = money.getValueWithTwoDecimalsPrecisionInStringFormat()
         Assert.assertEquals(text, "0.51")
     }
 

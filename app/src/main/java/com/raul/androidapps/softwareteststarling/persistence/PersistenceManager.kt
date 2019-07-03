@@ -1,7 +1,6 @@
 package com.raul.androidapps.softwareteststarling.persistence
 
 import androidx.lifecycle.LiveData
-import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
 import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
@@ -20,6 +19,6 @@ interface PersistenceManager {
     suspend fun saveFeeds(accountId: String, feedsResponse: FeedsResponse?)
     suspend fun getFeed(feedId: String): FeedsEntity?
     fun getPotentialSavings(accountId: String): LiveData<List<FeedsEntity>>
-    suspend fun markFeedsAsSaved(feeds: List<FeedsEntity>?)
+    suspend fun markFeedsAsSaved(feeds: List<String>?)
 
 }

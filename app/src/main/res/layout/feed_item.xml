@@ -2,8 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <import type="com.raul.androidapps.softwareteststarling.R" />
-        <import type="com.raul.androidapps.softwareteststarling.model.Direction" />
+        <import type="com.raul.androidapps.softwareteststarling.R"/>
+        <import type="com.raul.androidapps.softwareteststarling.model.Direction"/>
+        <import type="com.raul.androidapps.softwareteststarling.model.SavingState"/>
         <variable name="feed" type="com.raul.androidapps.softwareteststarling.model.Feed"/>
         <variable name="resources" type="com.raul.androidapps.softwareteststarling.resources.ResourcesManager"/>
         <variable name="amount" type="String"/>
@@ -18,62 +19,62 @@
                 android:id="@+id/reference"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="External Payment"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@{feed.reference}"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="External Payment"
         />
         <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Mickey Mouse"
                 android:text="@{feed.counterPartyName}"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/reference"
                 app:layout_constraintStart_toStartOf="@id/reference"
+                app:layout_constraintTop_toBottomOf="@id/reference"
+                tools:text="Mickey Mouse"
         />
         <TextView
                 android:id="@+id/savings_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="@string/potential_saving"
-                android:text="@{feed.sentToGoal == true? resources.getString(R.string.current_saving) : resources.getString(R.string.potential_saving)}"
+                android:text="@{feed.availableForSaving.value == SavingState.SAVED.value? resources.getString(R.string.current_saving) : resources.getString(R.string.potential_saving)}"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/name"
                 app:layout_constraintStart_toStartOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                tools:text="@string/potential_saving"
         />
         <TextView
                 android:id="@+id/savings_value"
+                setTextColor="@{feed.availableForSaving.value == SavingState.SAVED.value? resources.getColor(R.color.colorGrey) : resources.getColor(R.color.colorIn)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="0.56"
+                android:layout_marginStart="8dp"
                 android:text="@{saving}"
-                setTextColor="@{feed.sentToGoal == true? resources.getColor(R.color.colorGrey) : resources.getColor(R.color.colorIn)}"
                 android:textSize="14sp"
-                app:layout_constraintTop_toTopOf="@id/savings_text"
                 app:layout_constraintBottom_toBottomOf="@id/savings_text"
                 app:layout_constraintStart_toEndOf="@id/savings_text"
-                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toTopOf="@id/savings_text"
+                tools:text="0.56"
         />
         <TextView
                 android:id="@+id/value"
+                setTextColor="@{feed.direction.equals(Direction.IN.value)? resources.getColor(R.color.colorIn) : resources.getColor(R.color.colorOut)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="GBP"
-                tools:textColor="@color/colorOut"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="@{amount}"
-                setTextColor="@{feed.direction.equals(Direction.IN.value)? resources.getColor(R.color.colorIn) : resources.getColor(R.color.colorOut)}"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="GBP"
+                tools:textColor="@color/colorOut"
         />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

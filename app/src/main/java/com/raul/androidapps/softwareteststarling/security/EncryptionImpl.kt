@@ -87,6 +87,8 @@ class EncryptionImpl @Inject constructor(private val context: Context): Encrypti
 
     override fun encryptString(text: String?, alias: String): String {
 
+        if(text.isNullOrBlank()) return ""
+
         val keyStore = getKeystoreInstance()
         var encryptedText = ""
         try {
@@ -98,7 +100,7 @@ class EncryptionImpl @Inject constructor(private val context: Context): Encrypti
             val inCipher = Cipher.getInstance(CIPHER_TYPE)
             inCipher.init(Cipher.ENCRYPT_MODE, publicKey)
 
-            val bytes = inCipher.doFinal(text?.toByteArray())
+            val bytes = inCipher.doFinal(text.toByteArray())
             encryptedText = Base64.encodeToString(bytes, Base64.DEFAULT)
 
 
@@ -110,6 +112,8 @@ class EncryptionImpl @Inject constructor(private val context: Context): Encrypti
     }
 
     override fun decryptString(text: String?, alias: String): String {
+
+        if(text.isNullOrBlank()) return ""
 
         val keyStore = getKeystoreInstance()
         var decryptedText = ""

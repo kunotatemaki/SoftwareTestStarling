@@ -24,5 +24,5 @@ data class Feed constructor(
     val country: String?,
     val spendingCategory: String?,
     var potentialSavings: Money?,
-    var sentToGoal: Boolean
+    var availableForSaving: SavingState
 )

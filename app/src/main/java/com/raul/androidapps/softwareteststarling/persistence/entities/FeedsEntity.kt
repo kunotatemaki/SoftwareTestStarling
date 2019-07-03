@@ -6,7 +6,9 @@ import com.raul.androidapps.softwareteststarling.extensions.getPotentialSavings
 import com.raul.androidapps.softwareteststarling.model.Direction
 import com.raul.androidapps.softwareteststarling.model.Feed
 import com.raul.androidapps.softwareteststarling.model.Money
+import com.raul.androidapps.softwareteststarling.model.SavingState
 import com.raul.androidapps.softwareteststarling.security.Encryption
+import com.raul.androidapps.softwareteststarling.utils.AppConstants
 import java.util.*
 
 
@@ -60,8 +62,8 @@ data class FeedsEntity constructor(
     var spendingCategory: String?,
     @Embedded(prefix = "potential_savings_")
     var potentialSavings: Money?,
-    @ColumnInfo(name = "sent_to_goal")
-    var sentToGoal: Boolean
+    @ColumnInfo(name = "available_for_saving")
+    var availableForSaving: Int
 
 ) {
     companion object {
@@ -77,7 +79,7 @@ data class FeedsEntity constructor(
             accountUid: String,
             feed: Feed,
             encryption: Encryption,
-            sentToGoal: Boolean
+            availableForSavingValue: Int
         ): FeedsEntity =
             FeedsEntity(
                 accountUid = accountUid,
@@ -111,7 +113,7 @@ data class FeedsEntity constructor(
                 country = feed.country,
                 spendingCategory = feed.spendingCategory,
                 potentialSavings = if(feed.direction == Direction.OUT.value) feed.amount?.getPotentialSavings() else null,
-                sentToGoal = sentToGoal
+                availableForSaving = availableForSavingValue
             )
 
     }
@@ -147,7 +149,7 @@ data class FeedsEntity constructor(
             country = this.country,
             spendingCategory = this.spendingCategory,
             potentialSavings = this.potentialSavings,
-            sentToGoal = this.sentToGoal
+            availableForSaving = SavingState.fromInt(this.availableForSaving)
         )
 
 

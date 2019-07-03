@@ -3,7 +3,10 @@ package com.raul.androidapps.softwareteststarling.ui
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.raul.androidapps.softwareteststarling.R
 import com.raul.androidapps.softwareteststarling.ui.common.StarlingViewModelFactory
 import com.raul.androidapps.softwareteststarling.databinding.MainActivityBinding
@@ -38,11 +41,21 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
             }
         }
-        networkViewModel.getAccountsAsync()
+
+        networkViewModel.getNetworkError().observe(this, Observer {
+            it?.let {
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                networkViewModel.resetError()
+            }
+        })
     }
 
     fun setBackArrow(visible: Boolean){
         supportActionBar?.setDisplayHomeAsUpEnabled(visible)
+    }
+
+    fun getInfoFromServer(){
+        networkViewModel.getAccountsAsync()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -54,5 +67,7 @@ class MainActivity : DaggerAppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun getViewModel(): NetworkViewModel = networkViewModel
 
 }

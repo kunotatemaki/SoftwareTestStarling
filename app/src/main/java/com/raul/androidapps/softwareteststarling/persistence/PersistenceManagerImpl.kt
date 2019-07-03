@@ -2,7 +2,7 @@ package com.raul.androidapps.softwareteststarling.persistence
 
 import androidx.lifecycle.LiveData
 import com.raul.androidapps.softwareteststarling.model.Direction
-import com.raul.androidapps.softwareteststarling.model.Feed
+import com.raul.androidapps.softwareteststarling.model.SavingState
 import com.raul.androidapps.softwareteststarling.network.responses.AccountsResponse
 import com.raul.androidapps.softwareteststarling.network.responses.BalanceResponse
 import com.raul.androidapps.softwareteststarling.network.responses.FeedsResponse
@@ -14,6 +14,7 @@ import com.raul.androidapps.softwareteststarling.persistence.entities.FeedsEntit
 import com.raul.androidapps.softwareteststarling.persistence.entities.IdentifiersEntity
 import com.raul.androidapps.softwareteststarling.persistence.relations.AccountWithAllInfo
 import com.raul.androidapps.softwareteststarling.security.Encryption
+import com.raul.androidapps.softwareteststarling.utils.AppConstants
 import javax.inject.Inject
 
 class PersistenceManagerImpl @Inject constructor(
@@ -86,13 +87,18 @@ class PersistenceManagerImpl @Inject constructor(
         val listOfFeeds: MutableList<FeedsEntity> = mutableListOf()
         feedsResponse?.feedItems?.forEach {
             val feedStored = getFeed(it.feedItemUid)
-            val sentToGoal = feedStored?.sentToGoal ?: false
+            val availableForSaving = feedStored?.availableForSaving
+                ?: if (it.direction == Direction.OUT.value && it.spendingCategory != AppConstants.SAVING_CATEGORY) {
+                    SavingState.AVAILABLE.value
+                } else {
+                    SavingState.NOT_AVAILABLE.value
+                }
             listOfFeeds.add(
                 FeedsEntity.fromAccountFeedUnencrypted(
                     accountId,
                     it,
                     encryption,
-                    sentToGoal
+                    availableForSaving
                 )
             )
         }
@@ -114,16 +120,15 @@ class PersistenceManagerImpl @Inject constructor(
      * @return list of feeds wrapped in an observable
      */
     override fun getPotentialSavings(accountId: String): LiveData<List<FeedsEntity>> =
-        db.feedsDao().getPotentialSavings(accountId, Direction.OUT.value)
+        db.feedsDao().getPotentialSavings(accountId, Direction.OUT.value, SavingState.AVAILABLE.value)
 
     /**
      * mark Feeds as sent to goal not to get them in #getPotentialSavings more than once
-     * @param accountId accountUid
-     * @return list of feeds wrapped in an observable
+     * @param feeds list of feeds
      */
-    override suspend fun markFeedsAsSaved(feeds: List<FeedsEntity>?) {
+    override suspend fun markFeedsAsSaved(feeds: List<String>?) {
         feeds?.let {
-            db.feedsDao().markFeedsAsSaved(it.map { feed -> feed.feedItemUid })
+            db.feedsDao().markFeedsAsSaved(it, SavingState.SAVED.value)
         }
     }
 

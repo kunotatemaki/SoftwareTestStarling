@@ -35,9 +35,8 @@ fun Money.getPotentialSavings(): Money? =
         else -> null //Todo implement other currencies
     }
 
-fun Float.getValueWithTwoDecimalsPrecissionInStringFormat(): String {
+fun Float.getValueWithTwoDecimalsPrecisionInStringFormat(): String {
     val df = DecimalFormat("#.##")
-    df.roundingMode = RoundingMode.CEILING
     return df.format(this)
 }
 
@@ -46,7 +45,6 @@ fun <T> LiveData<T>.getDistinct(): LiveData<T> {
     distinctLiveData.addSource(this, object : Observer<T> {
         private var initialized = false
         private var lastObj: T? = null
-        val test = 4.toDouble()
         override fun onChanged(obj: T?) {
             if (!initialized) {
                 initialized = true
