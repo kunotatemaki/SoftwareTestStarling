@@ -105,6 +105,9 @@ class AccountFragment : BaseFragment() {
         })
         viewModel.getListOfFeeds().observe(this.viewLifecycleOwner, Observer {
             it?.let {
+                if(it.isNotEmpty()){
+                    binding.feedContainer.loadingData.visibility = View.GONE
+                }
                 adapter.updateItems(it)
             }
         })

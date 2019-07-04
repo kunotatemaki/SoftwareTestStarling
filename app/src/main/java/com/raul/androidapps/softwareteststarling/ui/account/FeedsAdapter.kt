@@ -55,7 +55,7 @@ class FeedsAdapter constructor(
                 val value = it.minorUnits.toFloat() / 100
                 val textAmount = " ${value.getValueWithTwoDecimalsPrecisionInStringFormat()} ${it.currency}"
                 binding.amount = textAmount
-                if (feed.availableForSaving == SavingState.AVAILABLE) {
+                if (feed.availableForSaving != SavingState.NOT_AVAILABLE) {
                     binding.savingsText.visibility = View.VISIBLE
                     binding.savingsValue.visibility = View.VISIBLE
                     it.getPotentialSavings()?.let { saving ->
