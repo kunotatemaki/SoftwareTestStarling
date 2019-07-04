@@ -84,7 +84,7 @@
         />
 
         <TextView
-                android:id="@+id/balance"
+                android:id="@+id/balance_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 tools:text="300 GBP"
